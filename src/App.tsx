@@ -8,6 +8,7 @@ import NotFound from './Components/NotFound/NotFound';
 import Login from './Components/Login/Login';
 import Register from './Components/Register/Register';
 import MasterLayout from './Components/MasterLayout/MasterLayout';
+import ForgotPassword from './Components/ForgotPassword/ForgotPassword';
 
 function App() {
   const routes = createBrowserRouter([
@@ -18,7 +19,8 @@ function App() {
       children: [
         { index: true, element: <Login /> },
         { path: 'login', element: <Login /> },
-        { path: 'register', element: <Register /> }
+        { path: 'register', element: <Register /> },
+        { path: 'forgot', element: <ForgotPassword /> }
 
       ]
     },

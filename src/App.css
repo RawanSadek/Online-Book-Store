@@ -3,3 +3,24 @@
     padding: 0;
     box-sizing: border-box;
 }
+
+:root{
+    --main-blue: rgb(98,81,221);
+    --main-orange: rgb(239,107,74);
+}
+
+.blue-text{
+    color: var(--main-blue);
+}
+
+.blue-bg{
+    background-color: var(--main-blue);
+}
+
+.orange-text{
+    color: var(--main-orange);
+}
+
+.orange-bg{
+    background-color: var(--main-orange) !important;
+}
