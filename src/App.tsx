@@ -9,6 +9,9 @@ import Login from './Components/Login/Login';
 import Register from './Components/Register/Register';
 import MasterLayout from './Components/MasterLayout/MasterLayout';
 import ForgotPassword from './Components/ForgotPassword/ForgotPassword';
+import Home from './Components/Home/Home';
+import Products from './Components/Products/Products';
+import Cart from './Components/Cart/Cart';
 
 function App() {
   const routes = createBrowserRouter([
@@ -27,7 +30,14 @@ function App() {
     {
       path: 'dashboard',
       element: <MasterLayout />,
-      errorElement: <NotFound />
+      errorElement: <NotFound />,
+      children:
+      [
+        {index: true, element: <Home/>},
+        {path: 'home', element: <Home/>},
+        {path: 'products', element: <Products/>},
+        {path: 'cart', element: <Cart/>},
+      ]
     }
   ])
 
