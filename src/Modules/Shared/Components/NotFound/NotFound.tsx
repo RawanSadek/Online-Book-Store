@@ -1,4 +1,4 @@
-import notFound from '../../assets/book-with-broken-pages-animation-404-error.gif'
+import notFound from '../../../../assets/Not found.gif'
 export default function NotFound() {
   return (
     <div className='text-center'>

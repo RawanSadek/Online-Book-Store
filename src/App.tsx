@@ -3,15 +3,18 @@ import {
   RouterProvider,
 } from 'react-router-dom';
 import './App.css'
-import AuthLayout from './Components/AuthLayout/AuthLayout';
-import NotFound from './Components/NotFound/NotFound';
-import Login from './Components/Login/Login';
-import Register from './Components/Register/Register';
-import MasterLayout from './Components/MasterLayout/MasterLayout';
-import ForgotPassword from './Components/ForgotPassword/ForgotPassword';
-import Home from './Components/Home/Home';
-import Products from './Components/Products/Products';
-import Cart from './Components/Cart/Cart';
+import AuthLayout from './Modules/Shared/Components/AuthLayout/AuthLayout';
+import NotFound from './Modules/Shared/Components/NotFound/NotFound';
+import Login from './Modules/AuthModule/Components/Login/Login';
+import Register from './Modules/AuthModule/Components/Register/Register';
+import MasterLayout from './Modules/Shared/Components/MasterLayout/MasterLayout';
+import ForgotPassword from './Modules/AuthModule/Components/ForgotPassword/ForgotPassword';
+import Home from './Modules/HomeModule/Components/Home/Home';
+import Products from './Modules/HomeModule/Components/Products/Products';
+import Cart from './Modules/CartModule/Components/Cart/Cart';
+import ResetPassword from './Modules/AuthModule/Components/ResetPassword/ResetPassword';
+import ChangePassword from './Modules/AuthModule/Components/ChangePassword/ChangePassword';
+import ProtectedRoutes from './ProtectedRoutes/ProtectedRoutes';
 
 function App() {
   const routes = createBrowserRouter([
@@ -23,13 +26,15 @@ function App() {
         { index: true, element: <Login /> },
         { path: 'login', element: <Login /> },
         { path: 'register', element: <Register /> },
-        { path: 'forgot', element: <ForgotPassword /> }
+        { path: 'forgot', element: <ForgotPassword /> },
+        { path: 'reset', element: <ResetPassword /> },
+        { path: 'change', element: <ChangePassword /> }
 
       ]
     },
     {
       path: 'dashboard',
-      element: <MasterLayout />,
+      element: <ProtectedRoutes><MasterLayout/></ProtectedRoutes>,
       errorElement: <NotFound />,
       children:
       [
