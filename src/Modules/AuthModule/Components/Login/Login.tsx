@@ -6,7 +6,7 @@ import { useForm } from 'react-hook-form'
 import axios from 'axios'
 import { toast } from 'react-toastify'
 import {AUTH_URLs} from '../../../../Constants/END_POINTS'
-import { emailValidation, passwordValidation } from '../../../../Constants/VALIDATIONS'
+import { emailValidation, loginPasswordValidation } from '../../../../Constants/VALIDATIONS'
 import { useContext } from 'react'
 import { AuthContext } from '../../../../Contexts/AuthContext/AuthContext'
 
@@ -31,8 +31,8 @@ export default function Login() {
       
     } catch (error) {
       console.log(error)
+      toast.error("Wrong email or password !")
     }
-    // console.log(data);
   }
 
   return (
@@ -45,7 +45,7 @@ export default function Login() {
 
       <Box onSubmit={handleSubmit(OnSubmit)} component="form">
         <TextField type='email' id="email" autoComplete='email' variant="outlined" className='w-100' label="Email *" {...register('email', emailValidation)} error={!!errors.email} helperText={errors.email?.message}/>
-        <TextField type='password' id="password" autoComplete='password' variant="outlined" className='w-100 my-4' label="Password *" {...register('password', passwordValidation)} error={!!errors.password} helperText={errors.password?.message}/>
+        <TextField type='password' id="password" autoComplete='password' variant="outlined" className='w-100 my-4' label="Password *" {...register('password', loginPasswordValidation)} error={!!errors.password} helperText={errors.password?.message}/>
 
         <Grid container sx={{ justifyContent: 'space-between' }}>
           <Item display="flex" alignItems="center">

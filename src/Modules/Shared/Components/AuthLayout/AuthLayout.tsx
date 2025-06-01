@@ -15,7 +15,7 @@ export default function AuthLayout() {
       </Grid>
 
       <Grid size={{ sm: 12, md: 6 }} order={{ xs: 1, sm: 1, md: 2 }}>
-        <Box sx={{ display: 'flex', flexDirection:'column', justifyContent:'center', alignItems: 'center', height:'100vh', margin:'auto'}}>
+        <Box sx={{ display: 'flex', flexDirection:'column', justifyContent:'center', alignItems: 'center', height:'100vh', margin:'auto', overflow:"auto", pt:'20px'}}>
             <img src={logo} alt="logo" className='mb-5'/>
             <Item sx={{width:'70%'}}> <Outlet /></Item>
         </Box>

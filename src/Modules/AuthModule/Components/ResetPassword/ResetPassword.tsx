@@ -1,12 +1,11 @@
 import { Box, Button, Checkbox, Grid, Stack, TextField, Typography } from '@mui/material'
 import Item from '@mui/material/Box'
 import axios from 'axios'
-import React from 'react'
 import { useForm } from 'react-hook-form'
 import { useNavigate } from 'react-router-dom'
 import { toast } from 'react-toastify'
 import { AUTH_URLs } from '../../../../Constants/END_POINTS'
-import { emailValidation, otpValidation, passwordValidation } from '../../../../Constants/VALIDATIONS'
+import { emailValidation, otpValidation, regPasswordValidation } from '../../../../Constants/VALIDATIONS'
 
 export default function ResetPassword() {
   let navigate = useNavigate()
@@ -42,7 +41,7 @@ export default function ResetPassword() {
       <Box onSubmit={handleSubmit(OnSubmit)} component="form">
         <TextField type='email' id="email" autoComplete='email' variant="outlined" className='w-100' label="Email *" {...register('email', emailValidation)} error={!!errors.email} helperText={errors.email?.message} />
         <TextField type='text' id="otp" variant="outlined" className='w-100 my-4' label="OTP *" {...register('otp', otpValidation)} error={!!errors.otp} helperText={errors.otp?.message} />
-        <TextField type='password' id="password" autoComplete='password' variant="outlined" className='w-100 mb-4' label="New Password *" {...register('password', passwordValidation)} error={!!errors.password} helperText={errors.password?.message} />
+        <TextField type='password' id="password" autoComplete='password' variant="outlined" className='w-100 mb-4' label="New Password *" {...register('password', regPasswordValidation)} error={!!errors.password} helperText={errors.password?.message} />
 
         <Grid container>
           <Item display="flex" alignItems="center">
