@@ -15,6 +15,7 @@ import Cart from './Modules/CartModule/Components/Cart/Cart';
 import ResetPassword from './Modules/AuthModule/Components/ResetPassword/ResetPassword';
 import ChangePassword from './Modules/AuthModule/Components/ChangePassword/ChangePassword';
 import ProtectedRoutes from './ProtectedRoutes/ProtectedRoutes';
+import { ToastContainer } from 'react-toastify';
 
 function App() {
   const routes = createBrowserRouter([
@@ -34,20 +35,21 @@ function App() {
     },
     {
       path: 'dashboard',
-      element: <ProtectedRoutes><MasterLayout/></ProtectedRoutes>,
+      element: <ProtectedRoutes><MasterLayout /></ProtectedRoutes>,
       errorElement: <NotFound />,
       children:
-      [
-        {index: true, element: <Home/>},
-        {path: 'home', element: <Home/>},
-        {path: 'products', element: <Products/>},
-        {path: 'cart', element: <Cart/>},
-      ]
+        [
+          { index: true, element: <Home /> },
+          { path: 'home', element: <Home /> },
+          { path: 'products', element: <Products /> },
+          { path: 'cart', element: <Cart /> },
+        ]
     }
   ])
 
   return (
     <>
+      <ToastContainer />
       <RouterProvider router={routes}></RouterProvider>
     </>
   );

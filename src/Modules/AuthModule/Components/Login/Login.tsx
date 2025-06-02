@@ -30,8 +30,8 @@ export default function Login() {
       navigate('/dashboard')
       
     } catch (error) {
-      console.log(error)
       toast.error("Wrong email or password !")
+      console.log(error)
     }
   }
 
