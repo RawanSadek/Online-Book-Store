@@ -16,6 +16,7 @@ import ResetPassword from './Modules/AuthModule/Components/ResetPassword/ResetPa
 import ChangePassword from './Modules/AuthModule/Components/ChangePassword/ChangePassword';
 import ProtectedRoutes from './ProtectedRoutes/ProtectedRoutes';
 import { ToastContainer } from 'react-toastify';
+import Profile from './Modules/HomeModule/Components/Profile/Profile';
 
 function App() {
   const routes = createBrowserRouter([
@@ -43,6 +44,7 @@ function App() {
           { path: 'home', element: <Home /> },
           { path: 'products', element: <Products /> },
           { path: 'cart', element: <Cart /> },
+          { path: 'profile', element: <Profile /> },
         ]
     }
   ])

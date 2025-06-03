@@ -29,3 +29,7 @@
 .navBar-bg{
     background-color: var(--navBar-color);
 }
+
+.navBar-color{
+    color: var(--navBar-color)
+}

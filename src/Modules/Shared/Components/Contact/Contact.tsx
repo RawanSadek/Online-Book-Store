@@ -5,26 +5,6 @@ import { FaBloggerB, FaFacebookF, FaInstagram, FaLinkedinIn, FaPhone, FaTwitter}
 
 export default function Contact() {
 
-    function ResponsiveAppBar() {
-        const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(null);
-        const [anchorElUser, setAnchorElUser] = React.useState<null | HTMLElement>(null);
-
-        const handleOpenNavMenu = (event: React.MouseEvent<HTMLElement>) => {
-            setAnchorElNav(event.currentTarget);
-        };
-        const handleOpenUserMenu = (event: React.MouseEvent<HTMLElement>) => {
-            setAnchorElUser(event.currentTarget);
-        };
-
-        const handleCloseNavMenu = () => {
-            setAnchorElNav(null);
-        };
-
-        const handleCloseUserMenu = () => {
-            setAnchorElUser(null);
-        };
-
-    }
     return (
         <Box
       sx={{
@@ -41,23 +21,23 @@ export default function Contact() {
     >
       <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
         <FaPhone />
-        <Typography variant="body2">+91 8374902234</Typography>
+        <Typography variant="body1">+91 8374902234</Typography>
       </Box>
 
       <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
-        <IconButton size="small" color="inherit" >
+        <IconButton size="small" sx={{color:'white'}} >
           <FaFacebookF />
         </IconButton>
-        <IconButton size="small" color="inherit" >
+        <IconButton size="small" sx={{color:'white'}} >
           <FaInstagram />
         </IconButton>
-        <IconButton size="small" color="inherit" >
+        <IconButton size="small" sx={{color:'white'}} >
          <FaLinkedinIn />
         </IconButton>
-        <IconButton size="small" color="inherit" >
+        <IconButton size="small" sx={{color:'white'}} >
          <FaTwitter />
         </IconButton>
-        <IconButton size="small" color="inherit">
+        <IconButton size="small" sx={{color:'white'}}>
          <FaBloggerB />
         </IconButton>
       </Box>

@@ -8,7 +8,6 @@ export default function MasterLayout() {
   return (
     <>
       <div><Contact /></div>
-      <div><NavBar /></div>
       <div><Outlet /></div>
       <div><Footer /></div>
     </>
