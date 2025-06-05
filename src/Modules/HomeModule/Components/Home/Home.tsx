@@ -41,7 +41,7 @@ export default function Login() {
             <Item sx={{ width: '40%', order: { xs: 2, md: 1 } }}>
               <Typography variant="h2" component="h3" className='text-capitalize navBar-color fw-medium'>ipsum dolor si</Typography>
               <Typography variant="body1" className='navBar-color mt-3 fs-5' sx={{ letterSpacing: '2px', lineHeight: '30px' }}>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed eu feugiat amet, libero ipsum enim pharetra hac. Urna commodo, lacus ut magna velit eleifend. Amet, quis urna, a eu.</Typography>
-              <Button variant="outlined" color='inherit' sx={{ marginTop: '20px', fontWeight: '400', padding: '12px 30px', fontSize: '13px', color: '#393280' }} className='navbar-bg navbar-color'>Read More <BsArrowRight className='ms-2' /></Button>
+              <Button onClick={()=>{navigate('products')}} variant="outlined" color='inherit' sx={{ marginTop: '20px', fontWeight: '400', padding: '12px 30px', fontSize: '13px', color: '#393280' }} className='navbar-bg navbar-color'>Read More <BsArrowRight className='ms-2' /></Button>
             </Item>
             <Item sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', order: { xs: 1, md: 2 } }}>
               <img src={slider1} alt="" className='w-75' />
@@ -54,7 +54,7 @@ export default function Login() {
             <Item sx={{ width: '40%', order: { xs: 2, md: 1 } }}>
               <Typography variant="h2" component="h3" className='text-capitalize navBar-color fw-medium'>ipsum dolor si</Typography>
               <Typography variant="body1" className='navBar-color mt-3 fs-5' sx={{ letterSpacing: '2px', lineHeight: '30px' }}>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed eu feugiat amet, libero ipsum enim pharetra hac. Urna commodo, lacus ut magna velit eleifend. Amet, quis urna, a eu.</Typography>
-              <Button variant="outlined" color='inherit' sx={{ marginTop: '20px', fontWeight: '400', padding: '12px 30px', fontSize: '13px', color: '#393280' }} className='navbar-bg navbar-color'>Read More <BsArrowRight className='ms-2' /></Button>
+              <Button onClick={()=>{navigate('products')}} variant="outlined" color='inherit' sx={{ marginTop: '20px', fontWeight: '400', padding: '12px 30px', fontSize: '13px', color: '#393280' }} className='navbar-bg navbar-color'>Read More <BsArrowRight className='ms-2' /></Button>
             </Item>
             <Item sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', order: { xs: 1, md: 2 } }}>
               <img src={slider1} alt="" className='w-75' />
@@ -67,7 +67,7 @@ export default function Login() {
             <Item sx={{ width: '40%', order: { xs: 2, md: 1 } }}>
               <Typography variant="h2" component="h3" className='text-capitalize navBar-color fw-medium'>ipsum dolor si</Typography>
               <Typography variant="body1" className='navBar-color mt-3 fs-5' sx={{ letterSpacing: '2px', lineHeight: '30px' }}>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed eu feugiat amet, libero ipsum enim pharetra hac. Urna commodo, lacus ut magna velit eleifend. Amet, quis urna, a eu.</Typography>
-              <Button variant="outlined" color='inherit' sx={{ marginTop: '20px', fontWeight: '400', padding: '12px 30px', fontSize: '13px', color: '#393280' }} className='navbar-bg navbar-color'>Read More <BsArrowRight className='ms-2' /></Button>
+              <Button onClick={()=>{navigate('products')}} variant="outlined" color='inherit' sx={{ marginTop: '20px', fontWeight: '400', padding: '12px 30px', fontSize: '13px', color: '#393280' }} className='navbar-bg navbar-color'>Read More <BsArrowRight className='ms-2' /></Button>
             </Item>
             <Item sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', order: { xs: 1, md: 2 } }}>
               <img src={slider1} alt="" className='w-75' />
