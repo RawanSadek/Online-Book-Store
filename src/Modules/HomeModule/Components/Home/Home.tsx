@@ -31,6 +31,8 @@ import articleImg2 from '../../../../assets/article2.jpg'
 import articleImg3 from '../../../../assets/article3.jpg'
 import { IoIosMail } from "react-icons/io";
 import type { BooksType, CategoriesType } from '../../../../Constants/INTERFACES';
+import { FaFacebookF, FaTwitter } from 'react-icons/fa6';
+import { IoLogoInstagram } from 'react-icons/io5';
 
 
 export default function Login() {
@@ -118,7 +120,6 @@ export default function Login() {
 
   return (
     <>
-      <div><NavBar /></div>
       <Swiper className='swiper1'
         loop={true}
         pagination={{
@@ -142,7 +143,7 @@ export default function Login() {
               <Item sx={{ width: '40%', order: { xs: 2, md: 1 } }}>
                 <Typography variant="h2" component="h3" className='text-capitalize navBar-color fw-medium'>ipsum dolor si</Typography>
                 <Typography variant="body1" className='navBar-color mt-3 fs-5' sx={{ letterSpacing: '2px', lineHeight: '30px' }}>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed eu feugiat amet, libero ipsum enim pharetra hac. Urna commodo, lacus ut magna velit eleifend. Amet, quis urna, a eu.</Typography>
-                <Button onClick={() => { navigate('products') }} variant="outlined" color='inherit' sx={{ marginTop: '20px', fontWeight: '400', padding: '12px 30px', fontSize: '13px', color: '#393280' }} className='navbar-bg navbar-color'>Read More <BsArrowRight className='ms-2' /></Button>
+                <Button onClick={() => { navigate('/dashboard/books') }} variant="outlined" color='inherit' sx={{ marginTop: '20px', fontWeight: '400', padding: '12px 30px', fontSize: '13px', color: '#393280' }} className='navbar-bg navbar-color'>Read More <BsArrowRight className='ms-2' /></Button>
               </Item>
               <Item sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', order: { xs: 1, md: 2 } }}>
                 <img src={img} alt="" className='w-75' />
@@ -412,20 +413,26 @@ export default function Login() {
         <Typography variant='body2' sx={{ textAlign: 'center', color: '#7A7A7A' }} className='text-uppercase'>Read our articles</Typography>
         <Typography variant='h3' className='sec-title position-relative' sx={{ textAlign: 'center', color: '#173F5F', marginY: '20px', fontSize: '3rem' }}>Latest Articles</Typography>
 
-        <Box gap={3} sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+        <Grid container spacing={5} sx={{ width: '90%', margin: 'auto' }}>
           {articlesImgs.map((img, index) => (
-            <Item key={index} sx={{ display: 'flex', flexDirection: 'column', justifyContent: 'start', alignItems: 'center' }}>
-              <ImageListItem sx={{ width: '30%', height: '30%', overflow: 'hidden', bgcolor: 'red' }}>
-                <img src={img} alt="article img 1" className='w-100' />
-              </ImageListItem>
-              <Typography variant='caption'>2 aug, 2021</Typography>
-              <Typography variant='h5' className='navBar-color text-capitalize'>Reading books always makes the moments happy</Typography>
-              <Divider sx={{ bgcolor: '#C8C8C8', height: '2px', marginY: '40px' }} />
-            </Item>
-
+            <Grid key={index} size={{ xs: 12, md: 6, lg: 4 }}>
+              <Item>
+                <Box sx={{ height: '320px', maxHeight:'fit-content', overflow: 'hidden', bgcolor: '#C8C8C8' }} ><img src={img} alt="" className='w-100' /></Box>
+                <Typography variant='body2' className='text-secondary my-3'>2 Aug, 2021</Typography>
+                <Typography variant='h5' sx={{ lineHeight: '40px' }} className='navBar-color text-capitalize'>Reading books always makes the moments happy</Typography>
+                <Divider sx={{ bgcolor: 'grey', height: '1px', marginY: '20px' }} />
+                <Box sx={{ width: 'fit-content', marginLeft: 'auto' }}>
+                  <FaFacebookF className='navBar-color me-3' />
+                  <FaTwitter className='navBar-color me-3' />
+                  <IoLogoInstagram className='navBar-color me-3' />
+                </Box>
+              </Item>
+            </Grid>
           ))}
-        </Box>
-      </Box>
+
+        </Grid>
+        <Button variant="outlined" color='inherit' sx={{ marginY: '50px', fontWeight: '400', padding: '12px 30px', fontSize: '13px', color: '#393280'}} className='navbar-bg navbar-color d-block mx-auto rounded-0'>read all articles <BsArrowRight className='ms-2' /></Button>
+    </Box >
 
     </>
 

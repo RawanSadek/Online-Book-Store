@@ -6,6 +6,7 @@ import { VscHeart } from "react-icons/vsc";
 import { IoMenuOutline } from "react-icons/io5";
 import { useTheme } from '@mui/material/styles';
 import { useNavigate } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
 
 
 export default function NavBar() {
@@ -22,6 +23,11 @@ export default function NavBar() {
     setDrawerOpen(open);
   };
 
+
+  let location = useLocation();
+  let pathname = location.pathname;
+  console.log(pathname)
+
   const drawer = (
     <Box
       sx={{ width: 250 , padding: "30px"}}
@@ -34,8 +40,8 @@ export default function NavBar() {
           <ListItemText
             primary={text}
             sx={{
-              fontWeight: text === 'HOME' ? 'bold' : 'normal',
-              color: text === 'HOME' ? 'orangered' : 'black',
+              fontWeight: pathname == `/dashboard/${text.toLocaleLowerCase()}` ? 'bold' : 'normal',
+              color: pathname == `/dashboard/${text.toLocaleLowerCase()}` ? 'orangered' : 'black',
               marginBottom: 2
             }}
           />
@@ -61,10 +67,10 @@ export default function NavBar() {
               {navItems.map((item) => (
                 <React.Fragment key={item}>
                   {item !== "HOME" && <Divider orientation="vertical" flexItem sx={{ mx: 1 }} />}
-                  <Link href={`dashboard/${item.toLocaleLowerCase()}`} underline="none"
+                  <Link href={`/dashboard/${item.toLocaleLowerCase()}`} underline="none"
                     sx={{
                       fontWeight: 600,
-                      color: item === 'HOME' ? 'rgb(239,107,74)' : 'black',
+                      color: pathname == `/dashboard/${item.toLocaleLowerCase()}` ? 'rgb(239,107,74)' : 'black',
                       letterSpacing: 1,
                     }}
                   > {item}
@@ -84,7 +90,7 @@ export default function NavBar() {
             <Divider orientation="vertical" flexItem />
 
             <Tooltip title="Cart">
-              <IconButton>
+              <IconButton onClick={()=>{navigate('/dashboard/cart')}}>
                 <LiaShoppingBagSolid color='#393280' />
               </IconButton>
             </Tooltip>

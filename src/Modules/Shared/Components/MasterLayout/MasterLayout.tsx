@@ -7,9 +7,10 @@ import Contact from '../Contact/Contact';
 export default function MasterLayout() {
   return (
     <>
-      <div><Contact /></div>
-      <div><Outlet /></div>
-      <div><Footer /></div>
+      <Contact />
+      <NavBar />
+      <Outlet />
+      <Footer />
     </>
   )
 }
