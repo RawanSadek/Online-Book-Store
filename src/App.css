@@ -46,7 +46,7 @@
     background-color: var(--main-orange) !important;
 }
 
-.swiper-pagination {
+.swiper1 .swiper-pagination {
     width: fit-content !important;
     left: 11% !important;
     bottom: 10% !important;
@@ -57,4 +57,99 @@
     width: 12px !important;
     height: 12px !important;
 
+}
+
+.categs-sec-title::before {
+    position: absolute;
+    content: "";
+    width: 10%;
+    height: 2px;
+    background-color: var(--main-orange);
+    top: 13px;
+    left: -45px;
+}
+
+.categs-swiper-arrow:hover {
+    cursor: pointer;
+    color: white !important;
+    background-color: var(--main-orange) !important;
+    border-color: var(--main-orange) !important;
+}
+
+.swiper2 {
+    width: 90% !important;
+    /* min-height: 300px; */
+}
+
+.loading {
+    background-image: url(./assets/loading.gif);
+    width: 100%;
+    height: 100%;
+    background-repeat: no-repeat;
+    background-size: 120px;
+    background-position: center center;
+    position: absolute;
+    inset: 0;
+    z-index: 99999;
+}
+
+.sec-title::before {
+    position: absolute;
+    content: "";
+    width: 33vw;
+    height: 1px;
+    background-color: #E0E0E0;
+    top: 30px;
+    left: 10px;
+}
+
+.sec-title::after {
+    position: absolute;
+    content: "";
+    width: 33vw;
+    height: 1px;
+    background-color: #E0E0E0;
+    top: 30px;
+    right: 10px;
+}
+
+.custom-swiper-pagination {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: absolute;
+    /* gap: 10px; */
+}
+
+/* .swiper-pagination-bullets {
+    gap: 10px;
+} */
+
+.swiper-pagination-bullet-active {
+    margin: 0 10px !important;
+    position: relative;
+
+}
+
+.swiper-pagination-bullet-active:after {
+    position: absolute;
+    content: "";
+    top: -75%;
+    left: -75%;
+    width: 250%;
+    height: 250%;
+    border-radius: 50%;
+    border: 1px solid var(--main-orange);
+}
+
+.book-author::before{
+    position: absolute;
+    content: "";
+    width: 10%;
+    height: 2px;
+    background: var(--main-orange);
+}
+
+.swiper4-container{
+    background: linear-gradient(to right, #FBEEEE 20%, #F7FFFE 80%);
 }

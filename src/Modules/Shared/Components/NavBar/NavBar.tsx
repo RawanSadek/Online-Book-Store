@@ -1,6 +1,6 @@
 import { AppBar, Avatar, Badge, Box, Divider, Drawer, IconButton, Link, List, ListItemText, Toolbar, Tooltip, Typography, useMediaQuery } from '@mui/material'
 import React, { useState } from 'react'
-import { LuUserRound } from "react-icons/lu";
+import { LuLogOut, LuUserRound } from "react-icons/lu";
 import { LiaShoppingBagSolid } from "react-icons/lia";
 import { VscHeart } from "react-icons/vsc";
 import { IoMenuOutline } from "react-icons/io5";
@@ -12,7 +12,7 @@ export default function NavBar() {
 
   let navigate = useNavigate();
 
-  const navItems = ['HOME', 'ABOUT US', 'BOOKS', 'NEW RELEASE', 'CONTACT US', 'BLOG'];
+  const navItems = ['HOME', 'BOOKS', 'NEW RELEASE'];
 
   const [drawerOpen, setDrawerOpen] = useState(false);
   const theme = useTheme();
@@ -57,10 +57,11 @@ export default function NavBar() {
             </IconButton>
           ) : (
             <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+
               {navItems.map((item) => (
                 <React.Fragment key={item}>
                   {item !== "HOME" && <Divider orientation="vertical" flexItem sx={{ mx: 1 }} />}
-                  <Link href="#" underline="none"
+                  <Link href={`dashboard/${item.toLocaleLowerCase()}`} underline="none"
                     sx={{
                       fontWeight: 600,
                       color: item === 'HOME' ? 'rgb(239,107,74)' : 'black',
@@ -93,6 +94,14 @@ export default function NavBar() {
             <Tooltip title="Favourites">
               <IconButton>
                 <VscHeart color='#393280' />
+              </IconButton>
+            </Tooltip>
+
+            <Divider orientation="vertical" flexItem />
+
+            <Tooltip title="Logout">
+              <IconButton onClick={()=>navigate('/')}>
+                <LuLogOut color='#393280' />
               </IconButton>
             </Tooltip>
 
