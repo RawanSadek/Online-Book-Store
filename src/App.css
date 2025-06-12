@@ -139,7 +139,7 @@
 .book-author::before {
     position: absolute;
     content: "";
-    width: 10%;
+    width: 65%;
     height: 2px;
     background: var(--main-orange);
 }
@@ -161,6 +161,13 @@
     border: 12px solid white;
 }
 
-/* .ps-menuitem-root{
-    justify-content: start !important;
+.cart-container{
+    background: linear-gradient(to right, #FFE5E5 , #F5FFFE);
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0px 0px 10px 5px rgb(229, 229, 229);
+}
+
+/* table{
+    border: none !important;
 } */

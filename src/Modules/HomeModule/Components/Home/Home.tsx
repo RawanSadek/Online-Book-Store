@@ -15,7 +15,7 @@ import { BsArrowLeftCircleFill, BsArrowRight, BsArrowRightCircleFill } from "rea
 import { LiaArrowAltCircleLeft, LiaArrowAltCircleRight } from 'react-icons/lia';
 import { Box, Button, Card, CardActionArea, CardContent, CardMedia, Container, Divider, Grid, ImageListItem, TextField, Typography } from '@mui/material';
 import Item from '@mui/material/Box';
-import { useEffect, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import axios from 'axios';
 import { BASE_BOOKS, BASE_CATEG } from '../../../../Constants/END_POINTS';
 import categImg1 from '../../../../assets/slider2-img1.jpg'
@@ -40,9 +40,17 @@ import { IoIosMail } from "react-icons/io";
 import type { BooksType, CategoriesType } from '../../../../Constants/INTERFACES';
 import { FaFacebookF, FaTwitter } from 'react-icons/fa6';
 import { IoLogoInstagram } from 'react-icons/io5';
+import { CartContext } from '../../../../Contexts/CartContext/CartContext';
 
 
 export default function Login() {
+//  let cartItems = JSON.parse(String(localStorage.getItem('cartItems'))) || []
+
+//  if(! localStorage.getItem('cartItems'))
+//  {
+//   localStorage.setItem('cartItems', '');
+//  }
+
   let navigate = useNavigate()
 
   let bookImgs:any=[book1,book2,book3,book4,book5,book6,book7,book8];
@@ -126,6 +134,7 @@ export default function Login() {
 
   const articlesImgs = [articleImg1, articleImg2, articleImg3];
 
+  let {addToCart}:any = useContext(CartContext);
 
   return (
     <>
@@ -272,7 +281,7 @@ export default function Login() {
             >
               <Box>
 
-                {books?.slice(1, 6).map((book, index) => (
+                {books?.slice(0, 8).map((book:BooksType, index) => (
                   <SwiperSlide className='categ-slider' onClick={() => { navigate(`/dashboard/books/${book._id}`) }}>
                     <Card key={book._id} sx={{ maxWidth: '100%', border: 'none', boxShadow: 'none', bgcolor: 'transparent' }}>
                       <CardActionArea>
@@ -287,7 +296,6 @@ export default function Login() {
                               const target = e.target as HTMLImageElement;
                               target.onerror = null; // prevent infinite loop
                               target.src = bookImgs[index%8];
-                              // book.image=target.src;
                             }}
                             sx={{ padding: '12%', bgcolor: 'white' }}
                           />
@@ -296,7 +304,7 @@ export default function Login() {
                             className="add-to-cart-overlay"
                             onClick={(e) => {
                               e.stopPropagation(); // prevent parent click
-                              // {navigate('/')}
+                              addToCart(book);
                             }}
                             sx={{
                               position: 'absolute',
@@ -385,7 +393,7 @@ export default function Login() {
                       </Item>
                       <Item sx={{ width: '45%' }}>
                         <Typography variant="h2" component="h3" className='text-capitalize navBar-color fw-medium mb-5'>Featured book</Typography>
-                        <Typography variant="body1" className='book-author text-secondary mt-3 fs-6 position-relative' sx={{ letterSpacing: '2px', lineHeight: '30px' }}>{b.author}</Typography>
+                        <Typography variant="body1" className='book-author text-secondary mt-3 text-uppercase position-relative' sx={{ letterSpacing: '2px', lineHeight: '30px', width:'fit-content', fontSize:'12px' }}>{`by ${b.author}`}</Typography>
                         <Typography variant="h4" component="h4" className='text-capitalize navBar-color fw-medium my-4'>{b.name}</Typography>
                         <Typography variant="body1" className='text-secondary mt-3 fs-6' sx={{ letterSpacing: '2px', lineHeight: '30px' }}>{b.description}</Typography>
                         <Typography variant="h5" component="h5" className='text-capitalize orange-text fw-medium my-5'>$ {b.price}</Typography>

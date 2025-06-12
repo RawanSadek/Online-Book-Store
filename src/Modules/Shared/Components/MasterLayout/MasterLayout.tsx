@@ -7,9 +7,15 @@ import Contact from '../Contact/Contact';
 export default function MasterLayout() {
   return (
     <>
-      <Contact />
-      <NavBar />
-      <Outlet />
+      <div style={{ position: 'fixed', top: 0, left: 0, right: 0, zIndex: 1000 }}>
+        <Contact />
+        <NavBar />
+      </div>
+
+      <div style={{ paddingTop: '140px' /* adjust based on Contact + NavBar height */ }}>
+        <Outlet />
+      </div>
+
       <Footer />
     </>
   )

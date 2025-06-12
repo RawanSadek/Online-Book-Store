@@ -46,13 +46,13 @@ export default function Book() {
           </Item>
         </Grid>
 
-        <Grid size={{ xs: 12, md: 6 }}>
-          <Item sx={{display: 'flex', flexDirection:'column',  justifyContent: 'center', alignItems: 'start'}}>
-            <Typography variant="h2" component="h3" className='text-capitalize navBar-color fw-medium mb-5'>Featured book</Typography>
-            <Typography variant="body1" className='book-author text-secondary mt-3 fs-6 position-relative' sx={{ letterSpacing: '2px', lineHeight: '30px' }}>{bookDetails.author}</Typography>
-            <Typography variant="h4" component="h4" className='text-capitalize navBar-color fw-medium my-4'>{bookDetails.name}</Typography>
-            <Typography variant="body1" className='text-secondary mt-3 fs-6' sx={{ letterSpacing: '2px', lineHeight: '30px' }}>{bookDetails.description}</Typography>
-            <Typography variant="h5" component="h5" className='text-capitalize orange-text fw-medium my-5'>$ {bookDetails.price}</Typography>
+        <Grid size={{ xs: 12, md: 6 }} sx={{display: 'flex', flexDirection:'column',  justifyContent: 'center', alignItems: 'start'}}>
+          <Item >
+            <Typography variant="h2" component="h3" className='text-capitalize navBar-color fw-medium'>Featured book</Typography>
+            <Typography variant="body1" className='book-author text-secondary mb-3 text-uppercase position-relative' sx={{ letterSpacing: '2px', lineHeight: '30px', fontSize:'12px', width:'fit-content' }}>{`by ${bookDetails.author}`}</Typography>
+            <Typography variant="h4" component="h4" className='text-capitalize navBar-color fw-medium mt-2'>{bookDetails.name}</Typography>
+            <Typography variant="body1" className='text-secondary mb-3 fs-6' sx={{ letterSpacing: '2px', lineHeight: '30px' }}>{bookDetails.description}</Typography>
+            <Typography variant="h5" component="h5" className='text-capitalize orange-text fw-medium my-2'>$ {bookDetails.price}</Typography>
             <Button variant="outlined" color='inherit' sx={{ marginTop: '20px', fontWeight: '400', padding: '12px 30px', fontSize: '13px', color: '#393280', letterSpacing: '2px' }} className='navbar-bg navbar-color'>add to cart <LiaShoppingBagSolid/></Button>
           </Item>
         </Grid>

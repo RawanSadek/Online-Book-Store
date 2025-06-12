@@ -6,7 +6,7 @@ export default function ProtectedRoutes(props: any) {
 
     let { userData }: any = useContext(AuthContext)
 
-    if (localStorage.getItem("accessToken") || userData) {
+    if (localStorage.getItem("profile") || userData) {
         return props.children;
 
     }

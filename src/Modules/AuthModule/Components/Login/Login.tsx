@@ -24,7 +24,8 @@ export default function Login() {
   let OnSubmit = async (data:FormInputs)=>{
     try {
       let response = await axios.post(AUTH_URLs.login,data)
-      localStorage.setItem('accessToken',response?.data?.data?.accessToken)
+      console.log(response)
+      localStorage.setItem('profile',JSON.stringify(response?.data?.data?.profile))
       saveUserData()
       toast.success("Welcome to the Book Store")
       navigate('/dashboard')

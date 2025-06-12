@@ -3,11 +3,12 @@ import { createContext, useEffect, useState, type ReactNode } from "react";
 
 
 interface User{
-    id: number;
-    firstName: string;
-    lastName: string;
+    _id: number;
+    first_name: string;
+    last_name: string;
     email: string;
-    password: string;
+    role: string;
+    shipping_addresses: string
 }
 
 interface AuthContextInterface{
@@ -23,15 +24,15 @@ interface AuthContextproviderProps {
 export default function AuthContextProvider({ children }: AuthContextproviderProps) {
     let [userData, setUserData] = useState<User|null>(null);
     let saveUserData = () => {
-        const encodedData = localStorage.getItem("accessToken");
-        if (encodedData) {
-            const decodedData = jwtDecode<User>(encodedData);
-            setUserData(decodedData)
+        const profileData = JSON.parse(String(localStorage.getItem("profile")));
+        if (profileData) {
+            // const decodedData = jwtDecode<User>(profileData);
+            setUserData(profileData)
         }
     }
 
     useEffect(()=>{
-        if(localStorage.getItem("accessToken"))
+        if(localStorage.getItem("profile"))
         {
             saveUserData()
         }

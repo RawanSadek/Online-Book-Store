@@ -15,6 +15,9 @@ import book6 from '../../../../assets/book6.png'
 import book7 from '../../../../assets/book7.png'
 import book8 from '../../../../assets/book8.png'
 import { useNavigate } from 'react-router-dom';
+import { CartContext } from '../../../../Contexts/CartContext/CartContext';
+import { useContext } from 'react';
+import type { BooksType } from '../../../../Constants/INTERFACES';
 
 export default function Login() {
 
@@ -24,6 +27,8 @@ export default function Login() {
   let books = JSON.parse(String(localStorage.getItem('books')));
 
   let bookImgs:any=[book1,book2,book3,book4,book5,book6,book7,book8];
+
+  let {addToCart}:any = useContext(CartContext);
 
   return (
     <>
@@ -65,9 +70,8 @@ export default function Login() {
         <Grid size={{ xs: 12, md: 9 }} sx={{ padding: '20px' }}>
 
           <Grid container spacing={2}>
-            {books.map((book:any, index:number)=>(
+            {books.map((book:BooksType, index:number)=>(
                 <Grid key={book._id} size={{ xs: 10, sm: 6, lg: 4 }} sx={{margin:'auto'}}>
-                  <Item>
                     <Card sx={{ maxWidth: '100%', border: 'none', boxShadow: 'none', bgcolor: 'transparent' }} onClick={()=>{navigate(`/dashboard/books/${book._id}`)}}>
                       <CardActionArea>
                         <Box className='book-img-container shadow-sm position-relative'>
@@ -89,7 +93,7 @@ export default function Login() {
                             className="add-to-cart-overlay"
                             onClick={(e) => {
                               e.stopPropagation(); // prevent parent click
-                              // {navigate('/')}
+                              addToCart(book);
                             }}
                             sx={{
                               position: 'absolute',
@@ -118,12 +122,10 @@ export default function Login() {
                         </CardContent>
                       </CardActionArea>
                     </Card>
-                  </Item>
                 </Grid>
             ))}
-            {books.map((book:any, index:number)=>(
+            {books.map((book:BooksType, index:number)=>(
                 <Grid key={book._id} size={{ xs: 10, sm: 6, lg: 4 }} sx={{margin:'auto'}} onClick={()=>{navigate(`/dashboard/books/${book._id}`)}}>
-                  <Item>
                     <Card sx={{ maxWidth: '100%', border: 'none', boxShadow: 'none', bgcolor: 'transparent' }}>
                       <CardActionArea>
                         <Box className='book-img-container shadow-sm position-relative'>
@@ -145,7 +147,7 @@ export default function Login() {
                             className="add-to-cart-overlay"
                             onClick={(e) => {
                               e.stopPropagation(); // prevent parent click
-                              // {navigate('/')}
+                              addToCart(book);
                             }}
                             sx={{
                               position: 'absolute',
@@ -174,7 +176,6 @@ export default function Login() {
                         </CardContent>
                       </CardActionArea>
                     </Card>
-                  </Item>
                 </Grid>
             ))}
           </Grid>
