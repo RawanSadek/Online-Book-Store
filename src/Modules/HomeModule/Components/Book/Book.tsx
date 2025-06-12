@@ -1,9 +1,62 @@
-import React from 'react'
+import { Box, Button, Grid, Typography } from '@mui/material';
+import Item from '@mui/material/Box';
+import { useParams } from 'react-router-dom';
+import { LiaShoppingBagSolid } from "react-icons/lia";
+import book1 from '../../../../assets/book1.png'
+import book2 from '../../../../assets/book2.png'
+import book3 from '../../../../assets/book3.png'
+import book4 from '../../../../assets/book4.png'
+import book5 from '../../../../assets/book5.png'
+import book6 from '../../../../assets/book6.png'
+import book7 from '../../../../assets/book7.png'
+import book8 from '../../../../assets/book8.png'
 
 export default function Book() {
+  const { bookId } = useParams();
+
+  let books = JSON.parse(String(localStorage.getItem('books')));
+
+  let bookDetails = books.find((book:any) => book._id === bookId);
+  let bookIdx = books.findIndex((book: any) => book._id === bookId);
+  console.log(bookIdx)
+  // console.log(typeof books[0]., typeof bookId);
+
+  let bookImgs:any=[book1,book2,book3,book4,book5,book6,book7,book8];
+
+
+  // console.log(bookId)
   return (
-    <div>
-      book details
-    </div>
+    <>
+      <Grid container spacing={2} padding={5}>
+        <Grid size={{ xs: 12, md: 6 }}>
+          <Item sx={{display: 'flex',  justifyContent: 'center', alignItems: 'center', height: '100%'}}>
+            <Box
+              component="img"
+              height="500px"
+              width="50%"
+              src={bookDetails.image}
+              alt="book cover"
+              onError={(e) => {
+                const target = e.target as HTMLImageElement;
+                target.onerror = null; // prevent infinite loop
+                target.src = bookImgs[bookIdx%8];
+              }}
+              sx={{ padding: '3%', bgcolor: 'white'}}
+            />
+          </Item>
+        </Grid>
+
+        <Grid size={{ xs: 12, md: 6 }}>
+          <Item sx={{display: 'flex', flexDirection:'column',  justifyContent: 'center', alignItems: 'start'}}>
+            <Typography variant="h2" component="h3" className='text-capitalize navBar-color fw-medium mb-5'>Featured book</Typography>
+            <Typography variant="body1" className='book-author text-secondary mt-3 fs-6 position-relative' sx={{ letterSpacing: '2px', lineHeight: '30px' }}>{bookDetails.author}</Typography>
+            <Typography variant="h4" component="h4" className='text-capitalize navBar-color fw-medium my-4'>{bookDetails.name}</Typography>
+            <Typography variant="body1" className='text-secondary mt-3 fs-6' sx={{ letterSpacing: '2px', lineHeight: '30px' }}>{bookDetails.description}</Typography>
+            <Typography variant="h5" component="h5" className='text-capitalize orange-text fw-medium my-5'>$ {bookDetails.price}</Typography>
+            <Button variant="outlined" color='inherit' sx={{ marginTop: '20px', fontWeight: '400', padding: '12px 30px', fontSize: '13px', color: '#393280', letterSpacing: '2px' }} className='navbar-bg navbar-color'>add to cart <LiaShoppingBagSolid/></Button>
+          </Item>
+        </Grid>
+      </Grid>
+    </>
   )
 }

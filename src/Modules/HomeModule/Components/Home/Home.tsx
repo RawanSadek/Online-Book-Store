@@ -24,11 +24,18 @@ import categImg3 from '../../../../assets/slider2-img3.jpg'
 import categImg4 from '../../../../assets/slider2-img4.jpg'
 import categImg5 from '../../../../assets/slider2-img5.jpg'
 import categImg6 from '../../../../assets/slider2-img6.jpg'
-import bookCover from '../../../../assets/tempBook.jpg'
 import saleImg from '../../../../assets/sale.png'
 import articleImg1 from '../../../../assets/article1.jpg'
 import articleImg2 from '../../../../assets/article2.jpg'
 import articleImg3 from '../../../../assets/article3.jpg'
+import book1 from '../../../../assets/book1.png'
+import book2 from '../../../../assets/book2.png'
+import book3 from '../../../../assets/book3.png'
+import book4 from '../../../../assets/book4.png'
+import book5 from '../../../../assets/book5.png'
+import book6 from '../../../../assets/book6.png'
+import book7 from '../../../../assets/book7.png'
+import book8 from '../../../../assets/book8.png'
 import { IoIosMail } from "react-icons/io";
 import type { BooksType, CategoriesType } from '../../../../Constants/INTERFACES';
 import { FaFacebookF, FaTwitter } from 'react-icons/fa6';
@@ -37,6 +44,8 @@ import { IoLogoInstagram } from 'react-icons/io5';
 
 export default function Login() {
   let navigate = useNavigate()
+
+  let bookImgs:any=[book1,book2,book3,book4,book5,book6,book7,book8];
 
   let [categories, setCategories] = useState<CategoriesType[] | null>([]);
   let [books, setBooks] = useState<BooksType[] | null>([]);
@@ -224,7 +233,7 @@ export default function Login() {
           }
         </Box>
 
-        <Button onClick={() => { navigate('categories') }} variant="outlined" color='inherit' sx={{ marginY: '40px', fontWeight: '400', padding: '12px 30px', fontSize: '13px', color: '#393280' }} className='navbar-bg navbar-color d-block mx-auto'>View More <BsArrowRight className='ms-2' /></Button>
+        <Button onClick={() => { navigate('/dashboard/categories') }} variant="outlined" color='inherit' sx={{ marginY: '40px', fontWeight: '400', padding: '12px 30px', fontSize: '13px', color: '#393280' }} className='navbar-bg navbar-color d-block mx-auto'>View More <BsArrowRight className='ms-2' /></Button>
       </Box>
 
       <Box sx={{ bgcolor: '#FCECEC', paddingY: '40px', paddingX: '10px', position: 'relative' }}>
@@ -263,23 +272,52 @@ export default function Login() {
             >
               <Box>
 
-                {books?.slice(1, 6).map((book) => (
-                  <SwiperSlide className='categ-slider' onClick={() => { navigate(`/dashboard/books/${book.name}`) }}>
+                {books?.slice(1, 6).map((book, index) => (
+                  <SwiperSlide className='categ-slider' onClick={() => { navigate(`/dashboard/books/${book._id}`) }}>
                     <Card key={book._id} sx={{ maxWidth: '100%', border: 'none', boxShadow: 'none', bgcolor: 'transparent' }}>
                       <CardActionArea>
-                        <Box className='book-img-container shadow-sm'
-                          component="img"
-                          height="420px"
-                          width="100%"
-                          src={book.image}
-                          alt="book cover"
-                          onError={(e) => {
-                            const target = e.target as HTMLImageElement;
-                            target.onerror = null; // prevent infinite loop
-                            target.src = bookCover;
-                          }}
-                          sx={{ padding: '12%', bgcolor: 'white' }}
-                        />
+                        <Box className='book-img-container shadow-sm position-relative'>
+                          <Box
+                            component="img"
+                            height="420px"
+                            width="100%"
+                            src={book.image}
+                            alt="book cover"
+                            onError={(e) => {
+                              const target = e.target as HTMLImageElement;
+                              target.onerror = null; // prevent infinite loop
+                              target.src = bookImgs[index%8];
+                              // book.image=target.src;
+                            }}
+                            sx={{ padding: '12%', bgcolor: 'white' }}
+                          />
+
+                          <Box
+                            className="add-to-cart-overlay"
+                            onClick={(e) => {
+                              e.stopPropagation(); // prevent parent click
+                              // {navigate('/')}
+                            }}
+                            sx={{
+                              position: 'absolute',
+                              width: '85%',
+                              height: 'fit-content',
+                              top: '50%',
+                              left: '50%',
+                              transform: 'translate(-50%, -50%)',
+                              backgroundColor: '#ED553B',
+                              color: 'white',
+                              padding: '10px',
+                              fontWeight: 'bold',
+                              fontSize: '20px',
+                              textAlign: 'center',
+                              opacity: 0,
+                              visibility: 'hidden',
+                              transition: 'all 0.4s',
+                            }}
+                          >ADD TO CART</Box>
+                        </Box>
+
                         <CardContent>
                           <Typography gutterBottom variant="h6" className='navBar-color text-center text-capitalize'>{book.name}</Typography>
                           <Typography gutterBottom variant="body2" className='text-center text-capitalize text-secondary'>{book.author}</Typography>
@@ -334,14 +372,14 @@ export default function Login() {
                 <>
                   <SwiperSlide key={index} className='w-100 mb-5'>
                     <Box sx={{ display: 'flex', flexDirection: { xs: 'column', md: 'row', lg: 'row' }, justifyContent: 'space-between', alignItems: 'center' }}>
-                      <Item sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', mb: '50px' }}>
-                        <img className='w-50'
+                      <Item sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center'}}>
+                        <img className='bookImg'
                           src={b.image}
                           alt="book cover"
                           onError={(e) => {
                             const target = e.target as HTMLImageElement;
                             target.onerror = null; // prevent infinite loop
-                            target.src = bookCover;
+                            target.src = bookImgs[index%8];
                           }}
                         />
                       </Item>
@@ -351,7 +389,7 @@ export default function Login() {
                         <Typography variant="h4" component="h4" className='text-capitalize navBar-color fw-medium my-4'>{b.name}</Typography>
                         <Typography variant="body1" className='text-secondary mt-3 fs-6' sx={{ letterSpacing: '2px', lineHeight: '30px' }}>{b.description}</Typography>
                         <Typography variant="h5" component="h5" className='text-capitalize orange-text fw-medium my-5'>$ {b.price}</Typography>
-                        <Button onClick={() => { navigate('books'); }} variant="outlined" color='inherit' sx={{ marginTop: '20px', fontWeight: '400', padding: '12px 30px', fontSize: '13px', color: '#393280', letterSpacing: '2px' }} className='navbar-bg navbar-color'>View More <BsArrowRight className='ms-2' /></Button>
+                        <Button onClick={() => { navigate('/dashboard/books'); }} variant="outlined" color='inherit' sx={{ marginTop: '20px', fontWeight: '400', padding: '12px 30px', fontSize: '13px', color: '#393280', letterSpacing: '2px' }} className='navbar-bg navbar-color'>View More <BsArrowRight className='ms-2' /></Button>
                       </Item>
                     </Box>
                   </SwiperSlide>
@@ -417,7 +455,7 @@ export default function Login() {
           {articlesImgs.map((img, index) => (
             <Grid key={index} size={{ xs: 12, md: 6, lg: 4 }}>
               <Item>
-                <Box sx={{ height: '320px', maxHeight:'fit-content', overflow: 'hidden', bgcolor: '#C8C8C8' }} ><img src={img} alt="" className='w-100' /></Box>
+                <Box sx={{ height: '320px', maxHeight: 'fit-content', overflow: 'hidden', bgcolor: '#C8C8C8' }} ><img src={img} alt="" className='w-100' /></Box>
                 <Typography variant='body2' className='text-secondary my-3'>2 Aug, 2021</Typography>
                 <Typography variant='h5' sx={{ lineHeight: '40px' }} className='navBar-color text-capitalize'>Reading books always makes the moments happy</Typography>
                 <Divider sx={{ bgcolor: 'grey', height: '1px', marginY: '20px' }} />
@@ -431,8 +469,8 @@ export default function Login() {
           ))}
 
         </Grid>
-        <Button variant="outlined" color='inherit' sx={{ marginY: '50px', fontWeight: '400', padding: '12px 30px', fontSize: '13px', color: '#393280'}} className='navbar-bg navbar-color d-block mx-auto rounded-0'>read all articles <BsArrowRight className='ms-2' /></Button>
-    </Box >
+        <Button variant="outlined" color='inherit' sx={{ marginY: '50px', fontWeight: '400', padding: '12px 30px', fontSize: '13px', color: '#393280' }} className='navbar-bg navbar-color d-block mx-auto rounded-0'>read all articles <BsArrowRight className='ms-2' /></Button>
+      </Box >
 
     </>
 

@@ -48,7 +48,7 @@ function App() {
           { path: 'books', 
             children: [
               {index: true, element: <Books/>},
-              {path: ':bookName', element: <Book/>},
+              {path: ':bookId', element: <Book/>},
             ]
            },
           {
