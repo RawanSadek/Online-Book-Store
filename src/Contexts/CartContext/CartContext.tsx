@@ -1,10 +1,11 @@
 import { jwtDecode } from "jwt-decode";
 import { createContext, useEffect, useState, type ReactNode } from "react";
-import type {BooksType } from "../../Constants/INTERFACES";
+import type { BooksType } from "../../Constants/INTERFACES";
 
 interface CartContextInterface {
     cartItems: BooksType[];
     addToCart: (book: BooksType) => void;
+    removeFromCart: (book: BooksType) => void;
 }
 export const CartContext = createContext<CartContextInterface | null>(null);
 
@@ -13,33 +14,38 @@ interface CartContextproviderProps {
 }
 
 export default function CartContextProvider({ children }: CartContextproviderProps) {
-    // let [booksData, setBooksData] = useState<Book[]>([]);
 
-    // let saveBooksData = () => {
-    //     const cartData = JSON.parse(String(localStorage.getItem("cartItems")));
-    //     if (cartData) {
-    //         setBooksData(cartData)
-    //     }
-    // }
-
-    let [cartItems, setCarItems] = useState<BooksType[]>([]);
+    let [cartItems, setCartItems] = useState<BooksType[]>([]);
 
     useEffect(() => {
         let storedCartItems = localStorage.getItem("cartItems");
         if (storedCartItems) {
-            setCarItems(JSON.parse(storedCartItems));
+            setCartItems(JSON.parse(storedCartItems));
         } else {
-            setCarItems([]);
+            setCartItems([]);
         }
     }, []);
 
     let addToCart = (book: BooksType) => {
         let updatedCart = [...cartItems, book];
-        setCarItems(updatedCart);
+        setCartItems(updatedCart);
         localStorage.setItem("cartItems", JSON.stringify(updatedCart));
     };
 
+    let removeFromCart = (book: BooksType) => {
+        let indexToRemove = [...cartItems].map((item, idx) => ({ item, idx })).reverse().find(({ item }) => item._id === book._id)?.idx; // to remove the last occurrence of the book in the array
+        let updatedCart;
+        if (indexToRemove !== undefined) {
+            updatedCart = [
+                ...cartItems.slice(0, indexToRemove),
+                ...cartItems.slice(indexToRemove + 1)
+            ];
+            setCartItems(updatedCart);
+            localStorage.setItem("cartItems", JSON.stringify(updatedCart));
+        }
+    };
+
     return (
-        <CartContext.Provider value={{ cartItems, addToCart }}>{children}</CartContext.Provider>
+        <CartContext.Provider value={{ cartItems, addToCart, removeFromCart }}>{children}</CartContext.Provider>
     )
 }

@@ -1,5 +1,5 @@
-import { Box, Button, Grid, IconButton, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography } from "@mui/material";
-import { useContext } from "react";
+import { Box, Button, Divider, Grid, IconButton, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography } from "@mui/material";
+import { useContext, useEffect, useState } from "react";
 import { CartContext } from "../../../../Contexts/CartContext/CartContext";
 import Paper from '@mui/material/Paper';
 import type { BooksType } from "../../../../Constants/INTERFACES";
@@ -12,9 +12,10 @@ import book6 from '../../../../assets/book6.png'
 import book7 from '../../../../assets/book7.png'
 import book8 from '../../../../assets/book8.png'
 import { useNavigate } from 'react-router-dom';
+import { FaArrowRightLong, FaMinus } from "react-icons/fa6";
 
 export default function Login() {
-  let { cartItems }: any = useContext(CartContext) || [];
+  let { cartItems, addToCart, removeFromCart }: any = useContext(CartContext) || [];
   let books = JSON.parse(String(localStorage.getItem('books')))
 
   let bookImgs: any = [book1, book2, book3, book4, book5, book6, book7, book8];
@@ -38,12 +39,35 @@ export default function Login() {
     return acc;
   }, []);
 
-  // console.log(consolidatedBooks[0].name)
+
+  // let [updatedBooks, setUpdatedBooks] = useState(consolidatedBooks)
+
+  let incrementCount = (_id: string) => {
+    let updatedBookList = consolidatedBooks.map((b: { _id: String; count: number; }) =>
+      b._id == _id ? { ...b, count: b.count + 1 } : b
+    );
+
+    let updatedBook = updatedBookList.find((b: { _id: string; }) => b._id == _id);
+    addToCart(updatedBook);
+  };
+
+  let decrementCount = (_id: string) => {
+    let updatedBookList = consolidatedBooks.map((b: { _id: String; count: number; }) =>
+      b._id == _id ? { ...b, count: b.count - 1 } : b
+    );
+
+    let updatedBook = updatedBookList.find((b: { _id: string; }) => b._id == _id);
+    removeFromCart(updatedBook)
+  };
+
+  // useEffect(() => {
+  //   setUpdatedBooks(cartItems);
+  // }, []);
 
   return (
     <>
-      <Grid container spacing={1} sx={{ margin: '20px' }}>
-        <Grid className='cart-container' size={{ xs: 12, md: 8 }}>
+      <Grid container spacing={5} sx={{ margin: '20px' }}>
+        <Grid className='cart-container' size={{ xs: 12, md: 7 }}>
           <Typography sx={{ color: 'navy', textTransform: 'capitalize', fontSize: '20px', marginBottom: '20px' }}>cart details</Typography>
 
           <TableContainer sx={{ border: ' none' }}>
@@ -62,58 +86,55 @@ export default function Login() {
                     key={book._id}
                     sx={{ border: ' none' }}
                   >
-                    {/* <TableCell sx={{color:'navy', width:'40%'}} align="center">
+                    <TableCell sx={{ color: 'navy', width: '30%', border: 'none' }} align="center">
                       <Grid container spacing={1} alignItems={"center"}>
-                        <Grid size={6}><img src={bookImgs[book.index%8]} alt="book img" className="w-50 text-center"/></Grid>
-                        <Grid size={6} sx={{textTransform:'capitalize', fontSize:'20px'}}>{book.name}</Grid>
+                        <Grid size={6}><img src={bookImgs[book.index % 8]} alt="book img" className="text-center" style={{ width: '70%' }} /></Grid>
+                        <Grid size={6} sx={{ textTransform: 'capitalize', fontSize: { xs: '.7rem', sm: '1rem', md: '1.5rem' } }}>{book.name}</Grid>
                       </Grid>
                     </TableCell>
-                    <TableCell sx={{color:'navy'}} align="center">{book.count}</TableCell>
-                    <TableCell sx={{color:'navy'}} align="center">{`$ ${book.price}`}</TableCell>
-                    <TableCell sx={{color:'navy'}} align="center">{`$ ${book.totalPrice}`}</TableCell> */}
-                    <Grid container alignItems="center" spacing={1}>
-                      <Grid>
-                        <Typography>01.</Typography>
-                      </Grid>
-
-                      <Grid>
-                        <img src={bookImgs[book.index % 8]} alt="book" style={{ width: '60px', height: 'auto' }} />
-                      </Grid>
-
-                      <Grid>
-                        <Typography sx={{ fontWeight: 'bold' }}>{book.name}</Typography>
-                      </Grid>
-
-                      <Grid>
-                        {/* Quantity control */}
-                        <Box sx={{ display: 'flex', alignItems: 'center', borderRadius: '6px', overflow: 'hidden' }}>
-                          <Button variant="contained">-</Button>
-                          <Box sx={{ px: 1, backgroundColor: '#fff', color: 'black' }}>{book.count}</Box>
-                          <Button variant="contained">+</Button>
-                        </Box>
-                      </Grid>
-
-                      <Grid >
-                        <Typography>{book.price} AED</Typography>
-                      </Grid>
-
-                      <Grid >
-                        <Typography>{book.totalPrice} AED</Typography>
-                      </Grid>
-
-                      <Grid >
-                        <IconButton>
-                          {/* <CloseIcon /> */}
-                        </IconButton>
-                      </Grid>
-                    </Grid>
-
-
+                    <TableCell sx={{ color: 'navy', border: 'none' }} align="center">
+                      <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', overflow: 'hidden' }}>
+                        <Button onClick={() => (decrementCount(book._id))} variant="contained" className="countBtn" sx={{ borderTopLeftRadius: '10px', borderBottomLeftRadius: '10px', padding: '0px', bgcolor: 'navy', minWidth: '10px', width: '2vw', maxWidth: '2vw' }}>-</Button>
+                        <Box sx={{ px: 1, color: 'black' }}>{book.count}</Box>
+                        <Button onClick={() => (incrementCount(book._id))} variant="contained" className="countBtn" sx={{ borderTopRightRadius: '10px', borderBottomRightRadius: '10px', padding: '0px', bgcolor: 'navy', minWidth: '10px', width: '2vw', maxWidth: '2vw' }}>+</Button>
+                      </Box>
+                    </TableCell>
+                    <TableCell sx={{ color: 'navy', fontSize: '1em', border: 'none' }} align="center">{`$ ${book.price}`}</TableCell>
+                    <TableCell sx={{ color: 'navy', fontSize: '1em', border: 'none' }} align="center">{`$ ${book.totalPrice}`}</TableCell>
                   </TableRow>
                 ))}
               </TableBody>
             </Table>
           </TableContainer>
+        </Grid>
+
+        <Grid size={{ xs: 7, md: 3.5 }} sx={{ marginX: 'auto', height:'fit-content' }}>
+
+          <Box className='ver-cart-container'>
+          <Typography sx={{ color: 'navy', textTransform: 'capitalize', fontSize: '20px', marginBottom: '20px' }}>Total Cost</Typography>
+
+          <Divider sx={{ bgcolor: 'navy', opacity: '1' }} />
+
+          <Grid container spacing={2} marginTop={"30px"} fontSize={'1.7rem'} color={'navy'}>
+            <Grid size={6}>Subtotal</Grid>
+            <Grid size={6} sx={{ textAlign: 'end' }}>Subtotal</Grid>
+          </Grid>
+
+          <Grid container spacing={2} marginTop={"30px"} fontSize={'1.7rem'} color={'navy'}>
+            <Grid size={6}>Shipping</Grid>
+            <Grid size={6} sx={{ textAlign: 'end' }}>Shipping</Grid>
+          </Grid>
+
+          <Grid container spacing={2} marginTop={"30px"} fontSize={'1.7rem'} color={'navy'}>
+            <Grid size={6}>Total</Grid>
+            <Grid size={6}sx={{ textAlign: 'end' }}>Total</Grid>
+          </Grid>
+          </Box>
+
+<Box sx={{textAlign:'center'}}>
+
+          <Button sx={{marginTop:'30px', color:'white', bgcolor:'#ED553B', borderRadius:'0px', paddingX:'30px', paddingY:'20px', fontSize:'12px', marginX:'auto'}}>Proceed to checkout <FaArrowRightLong className='ms-2'/></Button>
+</Box>
         </Grid>
       </Grid>
     </>

@@ -48,7 +48,7 @@ export default function NavBar() {
     >
       <List>
         {navItems.map((text) => (
-          <ListItemText onClick={() => { navigate(`/dashboard/${text.toLocaleLowerCase()}`) }}
+          <ListItemText key={text} onClick={() => { navigate(`/dashboard/${text.toLocaleLowerCase()}`) }}
             primary={text}
             sx={{
               // fontWeight: (pathname == `/dashboard/${text.toLocaleLowerCase()}` || pathname == '/dashboard') ? 'bolder' : 'normal',

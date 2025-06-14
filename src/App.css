@@ -155,6 +155,14 @@
     visibility: visible;
 } 
 
+.add-to-cart-overlay:hover{
+    background-color: #d12d10;
+}
+
+.add-to-cart-overlay:active{
+    background-color: #d12d1098;
+}
+
 .bookImg{
     width: 40%;
     /* border-radius: 5px; */
@@ -162,7 +170,14 @@
 }
 
 .cart-container{
-    background: linear-gradient(to right, #FFE5E5 , #F5FFFE);
+    background: linear-gradient(to right, #FFE5E5 20% , #F5FFFE);
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0px 0px 10px 5px rgb(229, 229, 229);
+}
+
+.ver-cart-container{
+    background: linear-gradient(to bottom, #FFE5E5 , #F5FFFE);
     padding: 20px;
     border-radius: 10px;
     box-shadow: 0px 0px 10px 5px rgb(229, 229, 229);
@@ -171,3 +186,7 @@
 /* table{
     border: none !important;
 } */
+
+.countBtn{
+    /* width: 40px !important; */
+}
