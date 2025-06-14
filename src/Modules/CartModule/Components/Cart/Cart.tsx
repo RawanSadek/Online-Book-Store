@@ -115,17 +115,17 @@ export default function Login() {
 
           <Divider sx={{ bgcolor: 'navy', opacity: '1' }} />
 
-          <Grid container spacing={2} marginTop={"30px"} fontSize={'1.7rem'} color={'navy'}>
+          <Grid container spacing={2} marginTop={"30px"} fontSize={{xs:'4vw', md:'1.6vw'}} color={'navy'}>
             <Grid size={6}>Subtotal</Grid>
             <Grid size={6} sx={{ textAlign: 'end' }}>Subtotal</Grid>
           </Grid>
 
-          <Grid container spacing={2} marginTop={"30px"} fontSize={'1.7rem'} color={'navy'}>
+          <Grid container spacing={2} marginTop={"30px"} fontSize={{xs:'4vw', md:'1.6vw'}} color={'navy'}>
             <Grid size={6}>Shipping</Grid>
             <Grid size={6} sx={{ textAlign: 'end' }}>Shipping</Grid>
           </Grid>
 
-          <Grid container spacing={2} marginTop={"30px"} fontSize={'1.7rem'} color={'navy'}>
+          <Grid container spacing={2} marginTop={"30px"} fontSize={{xs:'4vw', md:'1.6vw'}} color={'navy'}>
             <Grid size={6}>Total</Grid>
             <Grid size={6}sx={{ textAlign: 'end' }}>Total</Grid>
           </Grid>
