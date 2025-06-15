@@ -62,8 +62,13 @@ export default function NavBar() {
     </Box>
   );
 
-  const { cartItems }:any = useContext(CartContext);
-  let cartItemsCount = cartItems.length
+  let { cartItems }: any = useContext(CartContext);
+  let cartItemsCount = 0;
+  if(cartItems){
+    cartItems = cartItems.filter((item: { quantity: number; }) => item.quantity > 0);
+  cartItems.forEach((item: { quantity: number; }) => {
+    cartItemsCount += item.quantity;
+  });}
 
   // const [carItems, setCarItems] = useState<Book[]>([]);
   // const [carItemsCount, setCarItemsCount] = useState(0);

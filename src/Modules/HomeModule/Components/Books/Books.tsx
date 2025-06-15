@@ -16,19 +16,27 @@ import book7 from '../../../../assets/book7.png'
 import book8 from '../../../../assets/book8.png'
 import { useNavigate } from 'react-router-dom';
 import { CartContext } from '../../../../Contexts/CartContext/CartContext';
-import { useContext } from 'react';
+import { useContext, useState } from 'react';
 import type { BooksType } from '../../../../Constants/INTERFACES';
 
 export default function Login() {
 
-  let navigate  = useNavigate();
+  let navigate = useNavigate();
 
   let categories = JSON.parse(String(localStorage.getItem('categories')));
   let books = JSON.parse(String(localStorage.getItem('books')));
 
-  let bookImgs:any=[book1,book2,book3,book4,book5,book6,book7,book8];
+  let [filteredBooks, setFilteredBooks] = useState(books);
+  const [selectedCategories, setSelectedCategories] = useState([]);
 
-  let {addToCart}:any = useContext(CartContext);
+  let filterBooks = (categID: String) => {
+    let filtered = books.filter((book: BooksType) => book.category == categID )
+    setFilteredBooks(filtered);
+  }
+
+  let bookImgs: any = [book1, book2, book3, book4, book5, book6, book7, book8];
+
+  let { addToCart }: any = useContext(CartContext);
 
   return (
     <>
@@ -59,7 +67,7 @@ export default function Login() {
             <AccordionDetails sx={{ height: '50vh', overflowY: 'auto' }}>
               <FormGroup>
                 {categories.map((category: any) => (
-                  <FormControlLabel key={category._id} control={<Checkbox color='default' sx={{ color: 'navy' }} />} label={category.title} />
+                  <FormControlLabel key={category._id} control={<Checkbox onChange={() => (filterBooks(category._id))} /*checked={selectedCategories.includes(category._id)}*/ color='default' sx={{ color: 'navy' }} />} label={category.title} />
                 ))}
               </FormGroup>
             </AccordionDetails>
@@ -70,117 +78,117 @@ export default function Login() {
         <Grid size={{ xs: 12, md: 9 }} sx={{ padding: '20px' }}>
 
           <Grid container spacing={2}>
-            {books.map((book:BooksType, index:number)=>(
-                <Grid key={book._id} size={{ xs: 10, sm: 6, lg: 4 }} sx={{margin:'auto'}}>
-                    <Card sx={{ maxWidth: '100%', border: 'none', boxShadow: 'none', bgcolor: 'transparent' }} onClick={()=>{navigate(`/dashboard/books/${book._id}`)}}>
-                      <CardActionArea>
-                        <Box className='book-img-container shadow-sm position-relative'>
-                          <Box
-                            component="img"
-                            height="420px"
-                            width="100%"
-                            src={book.image}
-                            alt="book cover"
-                            onError={(e) => {
-                              const target = e.target as HTMLImageElement;
-                              target.onerror = null; // prevent infinite loop
-                              target.src = bookImgs[index%8];
-                            }}
-                            sx={{ padding: '12%', bgcolor: 'white' }}
-                          />
+            {filteredBooks.map((book: BooksType, index: number) => (
+              <Grid key={book._id} size={{ xs: 10, sm: 6, lg: 4 }} sx={{ margin: 'auto' }}>
+                <Card sx={{ maxWidth: '100%', border: 'none', boxShadow: 'none', bgcolor: 'transparent' }} onClick={() => { navigate(`/dashboard/books/${book._id}`) }}>
+                  <CardActionArea>
+                    <Box className='book-img-container shadow-sm position-relative'>
+                      <Box
+                        component="img"
+                        height="420px"
+                        width="100%"
+                        src={book.image}
+                        alt="book cover"
+                        onError={(e) => {
+                          const target = e.target as HTMLImageElement;
+                          target.onerror = null; // prevent infinite loop
+                          target.src = bookImgs[index % 8];
+                        }}
+                        sx={{ padding: '12%', bgcolor: 'white' }}
+                      />
 
-                          <Box
-                            className="add-to-cart-overlay"
-                            onClick={(e) => {
-                              e.stopPropagation(); // prevent parent click
-                              addToCart(book);
-                            }}
-                            sx={{
-                              position: 'absolute',
-                              width: '85%',
-                              height: 'fit-content',
-                              top: '50%',
-                              left: '50%',
-                              transform: 'translate(-50%, -50%)',
-                              backgroundColor: '#ED553B',
-                              color: 'white',
-                              padding: '10px',
-                              fontWeight: 'bold',
-                              fontSize: '20px',
-                              textAlign: 'center',
-                              opacity: 0,
-                              visibility: 'hidden',
-                              transition: 'all 0.4s',
-                            }}
-                          >ADD TO CART</Box>
-                        </Box>
+                      <Box
+                        className="add-to-cart-overlay"
+                        onClick={(e) => {
+                          e.stopPropagation(); // prevent parent click
+                          addToCart(book);
+                        }}
+                        sx={{
+                          position: 'absolute',
+                          width: '85%',
+                          height: 'fit-content',
+                          top: '50%',
+                          left: '50%',
+                          transform: 'translate(-50%, -50%)',
+                          backgroundColor: '#ED553B',
+                          color: 'white',
+                          padding: '10px',
+                          fontWeight: 'bold',
+                          fontSize: '20px',
+                          textAlign: 'center',
+                          opacity: 0,
+                          visibility: 'hidden',
+                          transition: 'all 0.4s',
+                        }}
+                      >ADD TO CART</Box>
+                    </Box>
 
-                        <CardContent>
-                          <Typography gutterBottom variant="h6" className='navBar-color text-center text-capitalize'>{book.name}</Typography>
-                          <Typography gutterBottom variant="body2" className='text-center text-capitalize text-secondary'>{book.author}</Typography>
-                          <Typography gutterBottom variant="h6" className='orange-text text-center text-capitalize'>{`$ ${book.price}`}</Typography>
-                        </CardContent>
-                      </CardActionArea>
-                    </Card>
-                </Grid>
+                    <CardContent>
+                      <Typography gutterBottom variant="h6" className='navBar-color text-center text-capitalize'>{book.name}</Typography>
+                      <Typography gutterBottom variant="body2" className='text-center text-capitalize text-secondary'>{book.author}</Typography>
+                      <Typography gutterBottom variant="h6" className='orange-text text-center text-capitalize'>{`$ ${book.price}`}</Typography>
+                    </CardContent>
+                  </CardActionArea>
+                </Card>
+              </Grid>
             ))}
-            {books.map((book:BooksType, index:number)=>(
-                <Grid key={book._id} size={{ xs: 10, sm: 6, lg: 4 }} sx={{margin:'auto'}} onClick={()=>{navigate(`/dashboard/books/${book._id}`)}}>
-                    <Card sx={{ maxWidth: '100%', border: 'none', boxShadow: 'none', bgcolor: 'transparent' }}>
-                      <CardActionArea>
-                        <Box className='book-img-container shadow-sm position-relative'>
-                          <Box
-                            component="img"
-                            height="420px"
-                            width="100%"
-                            src={book.image}
-                            alt="book cover"
-                            onError={(e) => {
-                              const target = e.target as HTMLImageElement;
-                              target.onerror = null; // prevent infinite loop
-                              target.src = bookImgs[index%8];
-                            }}
-                            sx={{ padding: '12%', bgcolor: 'white' }}
-                          />
+            {filteredBooks.map((book: BooksType, index: number) => (
+              <Grid key={book._id} size={{ xs: 10, sm: 6, lg: 4 }} sx={{ margin: 'auto' }} onClick={() => { navigate(`/dashboard/books/${book._id}`) }}>
+                <Card sx={{ maxWidth: '100%', border: 'none', boxShadow: 'none', bgcolor: 'transparent' }}>
+                  <CardActionArea>
+                    <Box className='book-img-container shadow-sm position-relative'>
+                      <Box
+                        component="img"
+                        height="420px"
+                        width="100%"
+                        src={book.image}
+                        alt="book cover"
+                        onError={(e) => {
+                          const target = e.target as HTMLImageElement;
+                          target.onerror = null; // prevent infinite loop
+                          target.src = bookImgs[index % 8];
+                        }}
+                        sx={{ padding: '12%', bgcolor: 'white' }}
+                      />
 
-                          <Box
-                            className="add-to-cart-overlay"
-                            onClick={(e) => {
-                              e.stopPropagation(); // prevent parent click
-                              addToCart(book);
-                            }}
-                            sx={{
-                              position: 'absolute',
-                              width: '85%',
-                              height: 'fit-content',
-                              top: '50%',
-                              left: '50%',
-                              transform: 'translate(-50%, -50%)',
-                              backgroundColor: '#ED553B',
-                              color: 'white',
-                              padding: '10px',
-                              fontWeight: 'bold',
-                              fontSize: '20px',
-                              textAlign: 'center',
-                              opacity: 0,
-                              visibility: 'hidden',
-                              transition: 'all 0.4s',
-                            }}
-                          >ADD TO CART</Box>
-                        </Box>
+                      <Box
+                        className="add-to-cart-overlay"
+                        onClick={(e) => {
+                          e.stopPropagation(); // prevent parent click
+                          addToCart(book);
+                        }}
+                        sx={{
+                          position: 'absolute',
+                          width: '85%',
+                          height: 'fit-content',
+                          top: '50%',
+                          left: '50%',
+                          transform: 'translate(-50%, -50%)',
+                          backgroundColor: '#ED553B',
+                          color: 'white',
+                          padding: '10px',
+                          fontWeight: 'bold',
+                          fontSize: '20px',
+                          textAlign: 'center',
+                          opacity: 0,
+                          visibility: 'hidden',
+                          transition: 'all 0.4s',
+                        }}
+                      >ADD TO CART</Box>
+                    </Box>
 
-                        <CardContent>
-                          <Typography gutterBottom variant="h6" className='navBar-color text-center text-capitalize'>{book.name}</Typography>
-                          <Typography gutterBottom variant="body2" className='text-center text-capitalize text-secondary'>{book.author}</Typography>
-                          <Typography gutterBottom variant="h6" className='orange-text text-center text-capitalize'>{`$ ${book.price}`}</Typography>
-                        </CardContent>
-                      </CardActionArea>
-                    </Card>
-                </Grid>
+                    <CardContent>
+                      <Typography gutterBottom variant="h6" className='navBar-color text-center text-capitalize'>{book.name}</Typography>
+                      <Typography gutterBottom variant="body2" className='text-center text-capitalize text-secondary'>{book.author}</Typography>
+                      <Typography gutterBottom variant="h6" className='orange-text text-center text-capitalize'>{`$ ${book.price}`}</Typography>
+                    </CardContent>
+                  </CardActionArea>
+                </Card>
+              </Grid>
             ))}
           </Grid>
 
-          <Stack spacing={2} sx={{ width: 'fit-content', margin:'auto' }}>
+          <Stack spacing={2} sx={{ width: 'fit-content', margin: 'auto' }}>
             <Pagination sx={{ width: 'fit-content', marginLeft: 'auto' }}
               count={5}
               renderItem={(item) => (

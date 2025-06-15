@@ -26,6 +26,7 @@ export default function Login() {
       let response = await axios.post(AUTH_URLs.login,data)
       console.log(response)
       localStorage.setItem('profile',JSON.stringify(response?.data?.data?.profile))
+      localStorage.setItem('accessToken',response?.data?.data?.accessToken)
       saveUserData()
       toast.success("Welcome to the Book Store")
       navigate('/dashboard')

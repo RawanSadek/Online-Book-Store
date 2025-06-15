@@ -22,9 +22,9 @@ export default function ChangePassword() {
     // let {password, password_new} = data;
     // let apiData = {password, password_new};
     const token = localStorage.getItem('accessToken')
+    console.log(token)
       try {
-        await axios.post(`${AUTH_URLs.change}`,data, {headers: {Authorization: `Bearer ${token}` }})
-        // localStorage.setItem('accessToken',response?.data?.data?.accessToken)
+        await axios.post(`${AUTH_URLs.change}`,data, {headers: {Authorization: `Bearer ${token}`}})
         toast.success("Your password has successfully changed.")
         navigate('/login')
         

@@ -138,7 +138,7 @@ export default function Login() {
 
   return (
     <>
-      <Swiper className='swiper1'
+      <Swiper className=' mt-0'
         loop={true}
         pagination={{
           clickable: true,

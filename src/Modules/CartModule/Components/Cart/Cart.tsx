@@ -1,4 +1,4 @@
-import { Box, Button, Divider, Grid, IconButton, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography } from "@mui/material";
+import { Box, Button, Divider, Grid, IconButton, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TextField, Typography } from "@mui/material";
 import { useContext, useEffect, useState } from "react";
 import { CartContext } from "../../../../Contexts/CartContext/CartContext";
 import Paper from '@mui/material/Paper';
@@ -15,29 +15,55 @@ import { useNavigate } from 'react-router-dom';
 import { FaArrowRightLong, FaMinus } from "react-icons/fa6";
 
 export default function Login() {
-  let { cartItems, addToCart, removeFromCart }: any = useContext(CartContext) || [];
+  let { cartItems, addToCart, removeFromCart }: any = useContext(CartContext);
+  // cartItems = cartItems.filter((item: { quantity: number; }) => item.quantity > 0);
+  // console.log('cartItems', cartItems)
+
   let books = JSON.parse(String(localStorage.getItem('books')))
 
   let bookImgs: any = [book1, book2, book3, book4, book5, book6, book7, book8];
 
-  let consolidatedBooks = cartItems.reduce((acc: any[], book: BooksType) => {
-    let existing = acc.find((item) => item._id === book._id);
-    if (existing) {
-      existing.count += 1;
-      existing.totalPrice += book.price;
-    } else {
-      let bookIdx = books.findIndex((b: BooksType) => b._id === book._id);
-      acc.push({
-        _id: book._id,
-        name: book.name,
-        price: book.price,
-        count: 1,
-        index: bookIdx,
-        totalPrice: book.price
-      });
-    }
-    return acc;
-  }, []);
+  // let consolidatedBooks = cartItems.reduce((acc: any[], book: BooksType) => {
+  //   let existing = acc.find((item) => item._id === book._id);
+  //   if (existing) {
+  //     existing.count += 1;
+  //     existing.totalPrice += book.price;
+  //   } else {
+  //     let bookIdx = books.findIndex((b: BooksType) => b._id === book._id);
+  //     acc.push({
+  //       _id: book._id,
+  //       name: book.name,
+  //       price: book.price,
+  //       count: 1,
+  //       index: bookIdx,
+  //       totalPrice: book.price
+  //     });
+  //   }
+  //   return acc;
+  // }, []);
+
+  let consolidatedBooks = cartItems?.map((cartItem: any) => {
+    let bookIndex = books.findIndex((book: BooksType) => book._id == cartItem.book); // handle both structures
+
+    let book = books[bookIndex];
+    let totalCost = cartItem.quantity * book.price
+
+    return {
+      _id: book._id,
+      name: book.name,
+      price: book.price,
+      count: cartItem.quantity,
+      index: bookIndex,
+      totalPrice: totalCost
+    };
+  })
+
+
+  let subtotal = 0;
+  consolidatedBooks.forEach((book: { count: number; price: number; }) => {
+    subtotal += book.count * book.price
+  });
+  // console.log('consolidatedBooks', consolidatedBooks)
 
 
   // let [updatedBooks, setUpdatedBooks] = useState(consolidatedBooks)
@@ -108,33 +134,90 @@ export default function Login() {
           </TableContainer>
         </Grid>
 
-        <Grid size={{ xs: 7, md: 3.5 }} sx={{ marginX: 'auto', height:'fit-content' }}>
+        <Grid size={{ xs: 7, md: 3.5 }} sx={{ marginX: 'auto', height: 'fit-content' }}>
 
           <Box className='ver-cart-container'>
-          <Typography sx={{ color: 'navy', textTransform: 'capitalize', fontSize: '20px', marginBottom: '20px' }}>Total Cost</Typography>
+            <Typography sx={{ color: 'navy', textTransform: 'capitalize', fontSize: '20px', marginBottom: '20px' }}>Total Cost</Typography>
 
-          <Divider sx={{ bgcolor: 'navy', opacity: '1' }} />
+            <Divider sx={{ bgcolor: 'navy', opacity: '1' }} />
 
-          <Grid container spacing={2} marginTop={"30px"} fontSize={{xs:'4vw', md:'1.6vw'}} color={'navy'}>
-            <Grid size={6}>Subtotal</Grid>
-            <Grid size={6} sx={{ textAlign: 'end' }}>Subtotal</Grid>
-          </Grid>
+            <Grid container spacing={2} marginTop={"30px"} fontSize={{ xs: '4vw', md: '1.6vw' }} color={'navy'}>
+              <Grid size={6}>Subtotal</Grid>
+              <Grid size={6} sx={{ textAlign: 'end' }}>{`$${subtotal}`}</Grid>
+            </Grid>
 
-          <Grid container spacing={2} marginTop={"30px"} fontSize={{xs:'4vw', md:'1.6vw'}} color={'navy'}>
-            <Grid size={6}>Shipping</Grid>
-            <Grid size={6} sx={{ textAlign: 'end' }}>Shipping</Grid>
-          </Grid>
+            <Grid container spacing={2} marginTop={"30px"} fontSize={{ xs: '4vw', md: '1.6vw' }} color={'navy'}>
+              <Grid size={6}>Shipping</Grid>
+              <Grid size={6} sx={{ textAlign: 'end' }}>$10</Grid>
+            </Grid>
 
-          <Grid container spacing={2} marginTop={"30px"} fontSize={{xs:'4vw', md:'1.6vw'}} color={'navy'}>
-            <Grid size={6}>Total</Grid>
-            <Grid size={6}sx={{ textAlign: 'end' }}>Total</Grid>
-          </Grid>
+            <Grid container spacing={2} marginTop={"30px"} fontSize={{ xs: '4vw', md: '1.6vw' }} color={'navy'}>
+              <Grid size={6}>Total</Grid>
+              <Grid size={6} sx={{ textAlign: 'end' }}>{`$${subtotal + 10}`}</Grid>
+            </Grid>
           </Box>
 
-<Box sx={{textAlign:'center'}}>
+          <Box sx={{ textAlign: 'center' }}>
 
-          <Button sx={{marginTop:'30px', color:'white', bgcolor:'#ED553B', borderRadius:'0px', paddingX:'30px', paddingY:'20px', fontSize:'12px', marginX:'auto'}}>Proceed to checkout <FaArrowRightLong className='ms-2'/></Button>
-</Box>
+            <Button sx={{ marginTop: '30px', color: 'white', bgcolor: '#ED553B', borderRadius: '0px', paddingX: '30px', paddingY: '20px', fontSize: '12px', marginX: 'auto' }}>Proceed to checkout <FaArrowRightLong className='ms-2' /></Button>
+          </Box>
+        </Grid>
+      </Grid>
+
+      <Grid container spacing={5} marginX={'20px'} marginY={'40px'}>
+        <Grid className='cart-container' size={{ xs: 12, md: 9 }}>
+          <Typography variant="h4" marginBottom={"20px"}>Shipping Data</Typography>
+
+          <Grid container spacing={5}>
+            <Grid size={{ xs: 10, md: 6 }} marginX={'auto'}>
+              <Box sx={{ p: 2, borderRadius: 2 }} marginX={'auto'}>
+                <Typography sx={{ fontSize: '20px', color: 'navy', mb: 1 }}>User Name</Typography>
+                <TextField fullWidth variant="outlined" sx={{ backgroundColor: 'white', borderRadius: 1, '& .MuiOutlinedInput-root': { '& fieldset': {}, '&:hover fieldset': { border: 'none', }, '&.Mui-focused fieldset': { border: 'none' } } }} />
+              </Box>
+            </Grid>
+
+            <Grid size={{ xs: 10, md: 6 }} marginX={'auto'}>
+              <Box sx={{ p: 2, borderRadius: 2 }}>
+                <Typography sx={{ fontSize: '20px', color: 'navy', mb: 1 }}>E-mail</Typography>
+                <TextField fullWidth variant="outlined" sx={{ backgroundColor: 'white', borderRadius: 1, '& .MuiOutlinedInput-root': { '& fieldset': {}, '&:hover fieldset': { border: 'none', }, '&.Mui-focused fieldset': { border: 'none' } } }} />
+              </Box>
+            </Grid>
+          </Grid>
+
+          <Grid container spacing={3}>
+            <Grid size={{ xs: 10, md: 6 }} marginX={'auto'}>
+              <Box sx={{ p: 2, borderRadius: 2 }}>
+                <Typography sx={{ fontSize: '20px', color: 'navy', mb: 1 }}>Country</Typography>
+                <TextField fullWidth variant="outlined" sx={{ backgroundColor: 'white', borderRadius: 1, '& .MuiOutlinedInput-root': { '& fieldset': {}, '&:hover fieldset': { border: 'none', }, '&.Mui-focused fieldset': { border: 'none' } } }} />
+              </Box>
+            </Grid>
+
+            <Grid size={{ xs: 10, md: 6 }} marginX={'auto'}>
+              <Box sx={{ p: 2, borderRadius: 2 }}>
+                <Typography sx={{ fontSize: '20px', color: 'navy', mb: 1 }}>City</Typography>
+                <TextField fullWidth variant="outlined" sx={{ backgroundColor: 'white', borderRadius: 1, '& .MuiOutlinedInput-root': { '& fieldset': {}, '&:hover fieldset': { border: 'none', }, '&.Mui-focused fieldset': { border: 'none' } } }} />
+              </Box>
+            </Grid>
+          </Grid>
+
+          <Grid container spacing={3}>
+            <Grid size={{ xs: 10, md: 6 }} marginX={'auto'}>
+              <Box sx={{ p: 2, borderRadius: 2 }}>
+                <Typography sx={{ fontSize: '20px', color: 'navy', mb: 1 }}>Address</Typography>
+                <TextField fullWidth variant="outlined" sx={{ backgroundColor: 'white', borderRadius: 1, '& .MuiOutlinedInput-root': { '& fieldset': {}, '&:hover fieldset': { border: 'none', }, '&.Mui-focused fieldset': { border: 'none' } } }} />
+              </Box>
+            </Grid>
+
+            <Grid size={{ xs: 10, md: 6}} marginX={'auto'}>
+              <Box sx={{ p: 2, borderRadius: 2 }}>
+                <Typography sx={{ fontSize: '20px', color: 'navy', mb: 1 }}>Phone Number</Typography>
+                <TextField fullWidth variant="outlined" sx={{ backgroundColor: 'white', borderRadius: 1, '& .MuiOutlinedInput-root': { '& fieldset': {}, '&:hover fieldset': { border: 'none', }, '&.Mui-focused fieldset': { border: 'none' } } }} />
+              </Box>
+            </Grid>
+          </Grid>
+
+
+
         </Grid>
       </Grid>
     </>

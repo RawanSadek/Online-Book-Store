@@ -24,6 +24,12 @@ interface AuthContextproviderProps {
 export default function AuthContextProvider({ children }: AuthContextproviderProps) {
     let [userData, setUserData] = useState<User|null>(null);
     let saveUserData = () => {
+        localStorage.getItem("accessToken");
+        // const encodedData = localStorage.getItem("accessToken");
+        // if (encodedData) {
+        //     const decodedData = jwtDecode<User>(encodedData);
+        //     setUserData(decodedData)
+        // }
         const profileData = JSON.parse(String(localStorage.getItem("profile")));
         if (profileData) {
             // const decodedData = jwtDecode<User>(profileData);
