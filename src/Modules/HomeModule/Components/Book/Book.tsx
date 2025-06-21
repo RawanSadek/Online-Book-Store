@@ -10,9 +10,13 @@ import book5 from '../../../../assets/book5.png'
 import book6 from '../../../../assets/book6.png'
 import book7 from '../../../../assets/book7.png'
 import book8 from '../../../../assets/book8.png'
+import { useContext } from 'react';
+import { CartContext } from '../../../../Contexts/CartContext/CartContext';
 
 export default function Book() {
   const { bookId } = useParams();
+
+  let {addToCart}:any = useContext(CartContext);
 
   let books = JSON.parse(String(localStorage.getItem('books')));
 
@@ -53,7 +57,7 @@ export default function Book() {
             <Typography variant="h4" component="h4" className='text-capitalize navBar-color fw-medium mt-2'>{bookDetails.name}</Typography>
             <Typography variant="body1" className='text-secondary mb-3 fs-6' sx={{ letterSpacing: '2px', lineHeight: '30px' }}>{bookDetails.description}</Typography>
             <Typography variant="h5" component="h5" className='text-capitalize orange-text fw-medium my-2'>$ {bookDetails.price}</Typography>
-            <Button variant="outlined" color='inherit' sx={{ marginTop: '20px', fontWeight: '400', padding: '12px 30px', fontSize: '13px', color: '#393280', letterSpacing: '2px' }} className='navbar-bg navbar-color'>add to cart <LiaShoppingBagSolid/></Button>
+            <Button onClick={()=>(addToCart(bookDetails))} variant="outlined" color='inherit' sx={{ marginTop: '20px', fontWeight: '400', padding: '12px 30px', fontSize: '13px', color: '#393280', letterSpacing: '2px' }} className='navbar-bg navbar-color'>add to cart <LiaShoppingBagSolid/></Button>
           </Item>
         </Grid>
       </Grid>

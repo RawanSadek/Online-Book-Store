@@ -20,8 +20,13 @@ import Profile from './Modules/HomeModule/Components/Profile/Profile';
 import Categories from './Modules/HomeModule/Components/Categories/Categories';
 import CategoryBooks from './Modules/HomeModule/Components/CategoryBooks/CategoryBooks';
 import Book from './Modules/HomeModule/Components/Book/Book';
+import { loadStripe } from "@stripe/stripe-js"
+import { Elements } from "@stripe/react-stripe-js"
 
 function App() {
+  const stripe = loadStripe(
+    'pk_test_51RcAun4JVprtu4zKzaohRHlKBmPzT8cYvIW7eEWIqt6ARWlVyrbpg2wZXG7kXSsVk1nNEKbKmW4DqlldqWSTE7BE00XN08Qmtg'
+  )
   const routes = createBrowserRouter([
     {
       path: '/',
@@ -45,17 +50,18 @@ function App() {
         [
           { index: true, element: <Home /> },
           { path: 'home', element: <Home /> },
-          { path: 'books', 
+          {
+            path: 'books',
             children: [
-              {index: true, element: <Books/>},
-              {path: ':bookId', element: <Book/>},
+              { index: true, element: <Books /> },
+              { path: ':bookId', element: <Book /> },
             ]
-           },
+          },
           {
             path: 'categories',
             children: [
               { index: true, element: <Categories /> },
-              {path: ':categName', element: <CategoryBooks/>}
+              { path: ':categName', element: <CategoryBooks /> }
             ]
           },
           { path: 'cart', element: <Cart /> },
@@ -67,7 +73,9 @@ function App() {
   return (
     <>
       <ToastContainer />
-      <RouterProvider router={routes}></RouterProvider>
+      <Elements stripe={stripe}>
+        <RouterProvider router={routes}></RouterProvider>
+      </Elements>
     </>
   );
 }

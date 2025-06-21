@@ -1,5 +1,5 @@
-import { Box, Button, Divider, Grid, IconButton, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TextField, Typography } from "@mui/material";
-import { useContext, useEffect, useState } from "react";
+import { Box, Button, Divider, FormControl, FormControlLabel, FormLabel, Grid, IconButton, Radio, RadioGroup, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TextField, Typography } from "@mui/material";
+import { useContext, useEffect, useState, type FormEvent } from "react";
 import { CartContext } from "../../../../Contexts/CartContext/CartContext";
 import Paper from '@mui/material/Paper';
 import type { BooksType } from "../../../../Constants/INTERFACES";
@@ -11,17 +11,28 @@ import book5 from '../../../../assets/book5.png'
 import book6 from '../../../../assets/book6.png'
 import book7 from '../../../../assets/book7.png'
 import book8 from '../../../../assets/book8.png'
-import { useNavigate } from 'react-router-dom';
+import { data, Form, useNavigate } from 'react-router-dom';
 import { FaArrowRightLong, FaMinus } from "react-icons/fa6";
+import { MdDeleteOutline } from "react-icons/md";
+import { toast } from "react-toastify";
+import { CART_URLs, ORDER_URLs } from "../../../../Constants/END_POINTS";
+import axios from "axios";
+import { CiCreditCard1 } from "react-icons/ci";
+import { AddressElement, CardElement, useElements, useStripe } from "@stripe/react-stripe-js";
+import type { Token } from "@stripe/stripe-js";
 
 export default function Login() {
-  let { cartItems, addToCart, removeFromCart }: any = useContext(CartContext);
+  let navigate = useNavigate()
+
+  let { cartItems, cartID, addToCart, removeFromCart, deleteProduct }: any = useContext(CartContext);
   // cartItems = cartItems.filter((item: { quantity: number; }) => item.quantity > 0);
   // console.log('cartItems', cartItems)
 
   let books = JSON.parse(String(localStorage.getItem('books')))
 
   let bookImgs: any = [book1, book2, book3, book4, book5, book6, book7, book8];
+
+  const accessToken = localStorage.getItem('accessToken');
 
   // let consolidatedBooks = cartItems.reduce((acc: any[], book: BooksType) => {
   //   let existing = acc.find((item) => item._id === book._id);
@@ -68,27 +79,97 @@ export default function Login() {
 
   // let [updatedBooks, setUpdatedBooks] = useState(consolidatedBooks)
 
-  let incrementCount = (_id: string) => {
-    let updatedBookList = consolidatedBooks.map((b: { _id: String; count: number; }) =>
-      b._id == _id ? { ...b, count: b.count + 1 } : b
-    );
+  // let incrementCount = (_id: string) => {
+  //   // console.log('consolidated', consolidatedBooks)
+  //   let updatedBookList = consolidatedBooks.map((b: { _id: String; count: number; }) =>
+  //     b._id == _id ? { ...b, count: b.count + 1 } : b
+  //   );
+  //   // console.log('updatedBookList', updatedBookList)
 
-    let updatedBook = updatedBookList.find((b: { _id: string; }) => b._id == _id);
-    addToCart(updatedBook);
-  };
 
-  let decrementCount = (_id: string) => {
-    let updatedBookList = consolidatedBooks.map((b: { _id: String; count: number; }) =>
-      b._id == _id ? { ...b, count: b.count - 1 } : b
-    );
+  //   let updatedBook = updatedBookList.find((b: { _id: string; }) => b._id == _id);
+  //   addToCart(updatedBook);
+  // };
 
-    let updatedBook = updatedBookList.find((b: { _id: string; }) => b._id == _id);
-    removeFromCart(updatedBook)
-  };
+  // let decrementCount = (_id: string) => {
+  //   let updatedBookList = consolidatedBooks.map((b: { _id: String; count: number; }) =>
+  //     b._id == _id ? { ...b, count: b.count - 1 } : b
+  //   );
 
-  // useEffect(() => {
-  //   setUpdatedBooks(cartItems);
-  // }, []);
+  //   let updatedBook = updatedBookList.find((b: { _id: string; }) => b._id == _id);
+  //   removeFromCart(updatedBook)
+  // };
+
+  const [paymentMethod, setPaymentMethod] = useState('cash');
+  
+
+  let stripe = useStripe()
+  let elements = useElements()
+
+  let handleSubmit = async (e: FormEvent) => {
+    e.preventDefault();
+
+    if (!stripe || !elements) {
+      return;
+    }
+
+    let cardElement = elements.getElement(CardElement);
+    let addressElement = elements.getElement(AddressElement);
+
+    if (!cardElement || !addressElement) {
+      return;
+    }
+
+    let address = await addressElement.getValue();
+    console.log(address)
+
+    let { error, token } = await stripe.createToken(cardElement);
+
+    if (error) {
+      toast.error(error.message);
+      return;
+    }
+
+    if (!token) {
+      console.error("Token creation failed and no error returned.");
+      toast.error("Something went wrong. Please try again.");
+      return;
+    }
+
+    if (address.complete) {
+      let id = cartID;
+      let data = {
+        token: token.id,
+        delivery_address: {
+          country: address.value.address.country,
+          city: address.value.address.city,
+          state: address.value.address.state,
+          building: 25,
+          street: "11",
+          floor: 1,
+          appartment: 1,
+          mobile: address.value.phone,
+          additional_info: "aa",
+          location: {
+            "type": "Point",
+            "coordinates": [30.0444, 31.2357]
+
+          }
+        }
+      }
+      // console.log("id   ",cartID)
+      try {
+        let response = await axios.post(`${ORDER_URLs.ceateOrder}/${id}`, data, { headers: { Authorization: `Bearer ${accessToken}` } });
+        console.log("sssssssssssssssssss", response)
+
+      } catch (error) {
+        console.log(error)
+        // toast.error(error.message);
+      }
+    }
+
+
+  }
 
   return (
     <>
@@ -104,6 +185,7 @@ export default function Login() {
                   <TableCell sx={{ border: 'none', lineHeight: '5px', color: 'navy', fontSize: '18px' }} align="center">Count</TableCell>
                   <TableCell sx={{ border: 'none', lineHeight: '5px', color: 'navy', fontSize: '18px' }} align="center">Price</TableCell>
                   <TableCell sx={{ border: 'none', lineHeight: '5px', color: 'navy', fontSize: '18px' }} align="center">Subtotal</TableCell>
+                  <TableCell sx={{ border: 'none', lineHeight: '5px', color: 'navy', fontSize: '18px' }} align="center"></TableCell>
                 </TableRow>
               </TableHead>
               <TableBody sx={{ border: ' none' }}>
@@ -120,13 +202,14 @@ export default function Login() {
                     </TableCell>
                     <TableCell sx={{ color: 'navy', border: 'none' }} align="center">
                       <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', overflow: 'hidden' }}>
-                        <Button onClick={() => (decrementCount(book._id))} variant="contained" className="countBtn" sx={{ borderTopLeftRadius: '10px', borderBottomLeftRadius: '10px', padding: '0px', bgcolor: 'navy', minWidth: '10px', width: '2vw', maxWidth: '2vw' }}>-</Button>
+                        <Button onClick={() => (removeFromCart(book))} variant="contained" className="countBtn" sx={{ borderTopLeftRadius: '10px', borderBottomLeftRadius: '10px', padding: '0px', bgcolor: 'navy', minWidth: '10px', width: '2vw', maxWidth: '2vw' }}>-</Button>
                         <Box sx={{ px: 1, color: 'black' }}>{book.count}</Box>
-                        <Button onClick={() => (incrementCount(book._id))} variant="contained" className="countBtn" sx={{ borderTopRightRadius: '10px', borderBottomRightRadius: '10px', padding: '0px', bgcolor: 'navy', minWidth: '10px', width: '2vw', maxWidth: '2vw' }}>+</Button>
+                        <Button onClick={() => (addToCart(book))} variant="contained" className="countBtn" sx={{ borderTopRightRadius: '10px', borderBottomRightRadius: '10px', padding: '0px', bgcolor: 'navy', minWidth: '10px', width: '2vw', maxWidth: '2vw' }}>+</Button>
                       </Box>
                     </TableCell>
                     <TableCell sx={{ color: 'navy', fontSize: '1em', border: 'none' }} align="center">{`$ ${book.price}`}</TableCell>
                     <TableCell sx={{ color: 'navy', fontSize: '1em', border: 'none' }} align="center">{`$ ${book.totalPrice}`}</TableCell>
+                    <TableCell sx={{ color: 'navy', fontSize: '1em', border: 'none' }} align="center"><MdDeleteOutline size={25} color="#ED553B" className="cursor-pointer" onClick={() => (deleteProduct(book))} /></TableCell>
                   </TableRow>
                 ))}
               </TableBody>
@@ -156,70 +239,55 @@ export default function Login() {
               <Grid size={6} sx={{ textAlign: 'end' }}>{`$${subtotal + 10}`}</Grid>
             </Grid>
           </Box>
-
-          <Box sx={{ textAlign: 'center' }}>
-
-            <Button sx={{ marginTop: '30px', color: 'white', bgcolor: '#ED553B', borderRadius: '0px', paddingX: '30px', paddingY: '20px', fontSize: '12px', marginX: 'auto' }}>Proceed to checkout <FaArrowRightLong className='ms-2' /></Button>
-          </Box>
         </Grid>
       </Grid>
 
-      <Grid container spacing={5} marginX={'20px'} marginY={'40px'}>
-        <Grid className='cart-container' size={{ xs: 12, md: 9 }}>
-          <Typography variant="h4" marginBottom={"20px"}>Shipping Data</Typography>
+      <form onSubmit={handleSubmit}>
+        <Grid width={'50%'} marginX={'20px'} marginY={'40px'}>
+          <Grid className='cart-container' size={{ xs: 12, md: 6 }}>
+            <Typography variant="h4" marginBottom={"20px"}>Payment Info</Typography>
 
-          <Grid container spacing={5}>
-            <Grid size={{ xs: 10, md: 6 }} marginX={'auto'}>
-              <Box sx={{ p: 2, borderRadius: 2 }} marginX={'auto'}>
-                <Typography sx={{ fontSize: '20px', color: 'navy', mb: 1 }}>User Name</Typography>
-                <TextField fullWidth variant="outlined" sx={{ backgroundColor: 'white', borderRadius: 1, '& .MuiOutlinedInput-root': { '& fieldset': {}, '&:hover fieldset': { border: 'none', }, '&.Mui-focused fieldset': { border: 'none' } } }} />
-              </Box>
+            <Grid>
+              <FormControl>
+                <FormLabel id="demo-controlled-radio-buttons-group" sx={{ color: 'navy', fontSize: '20px', mt: '20px', mb: '10px', '&.Mui-focused': { color: 'navy' } }}>Payment Method:</FormLabel>
+                <RadioGroup
+                  aria-labelledby="demo-controlled-radio-buttons-group"
+                  name="controlled-radio-buttons-group"
+                  value={paymentMethod}
+                  onChange={(e) => setPaymentMethod(e.target.value)}
+                >
+                  <FormControlLabel sx={{ color: 'navy' }} value="cash" control={<Radio defaultChecked sx={{ color: 'navy', '&.Mui-checked': { color: 'navy' } }} />} label="Cash on Delivery" />
+                  <FormControlLabel sx={{ color: 'navy' }} value="credit" control={<Radio sx={{ color: 'navy', '&.Mui-checked': { color: 'navy' } }} />} label="Credit Card" />
+                </RadioGroup>
+              </FormControl>
             </Grid>
 
-            <Grid size={{ xs: 10, md: 6 }} marginX={'auto'}>
-              <Box sx={{ p: 2, borderRadius: 2 }}>
-                <Typography sx={{ fontSize: '20px', color: 'navy', mb: 1 }}>E-mail</Typography>
-                <TextField fullWidth variant="outlined" sx={{ backgroundColor: 'white', borderRadius: 1, '& .MuiOutlinedInput-root': { '& fieldset': {}, '&:hover fieldset': { border: 'none', }, '&.Mui-focused fieldset': { border: 'none' } } }} />
-              </Box>
-            </Grid>
+            {paymentMethod == 'credit' &&
+              <FormControl sx={{ width: '100%' }}>
+                {/* <Grid size={2}> */}
+                {/* </Grid> */}
+                <FormLabel id="demo-controlled-radio-buttons-group" sx={{ color: 'grey', fontSize: '18px', mt: '20px', mb: '5px', '&.Mui-focused': { color: 'grey' } }}> Card Info:</FormLabel>
+                <CardElement />
+              </FormControl>}
           </Grid>
-
-          <Grid container spacing={3}>
-            <Grid size={{ xs: 10, md: 6 }} marginX={'auto'}>
-              <Box sx={{ p: 2, borderRadius: 2 }}>
-                <Typography sx={{ fontSize: '20px', color: 'navy', mb: 1 }}>Country</Typography>
-                <TextField fullWidth variant="outlined" sx={{ backgroundColor: 'white', borderRadius: 1, '& .MuiOutlinedInput-root': { '& fieldset': {}, '&:hover fieldset': { border: 'none', }, '&.Mui-focused fieldset': { border: 'none' } } }} />
-              </Box>
-            </Grid>
-
-            <Grid size={{ xs: 10, md: 6 }} marginX={'auto'}>
-              <Box sx={{ p: 2, borderRadius: 2 }}>
-                <Typography sx={{ fontSize: '20px', color: 'navy', mb: 1 }}>City</Typography>
-                <TextField fullWidth variant="outlined" sx={{ backgroundColor: 'white', borderRadius: 1, '& .MuiOutlinedInput-root': { '& fieldset': {}, '&:hover fieldset': { border: 'none', }, '&.Mui-focused fieldset': { border: 'none' } } }} />
-              </Box>
-            </Grid>
-          </Grid>
-
-          <Grid container spacing={3}>
-            <Grid size={{ xs: 10, md: 6 }} marginX={'auto'}>
-              <Box sx={{ p: 2, borderRadius: 2 }}>
-                <Typography sx={{ fontSize: '20px', color: 'navy', mb: 1 }}>Address</Typography>
-                <TextField fullWidth variant="outlined" sx={{ backgroundColor: 'white', borderRadius: 1, '& .MuiOutlinedInput-root': { '& fieldset': {}, '&:hover fieldset': { border: 'none', }, '&.Mui-focused fieldset': { border: 'none' } } }} />
-              </Box>
-            </Grid>
-
-            <Grid size={{ xs: 10, md: 6}} marginX={'auto'}>
-              <Box sx={{ p: 2, borderRadius: 2 }}>
-                <Typography sx={{ fontSize: '20px', color: 'navy', mb: 1 }}>Phone Number</Typography>
-                <TextField fullWidth variant="outlined" sx={{ backgroundColor: 'white', borderRadius: 1, '& .MuiOutlinedInput-root': { '& fieldset': {}, '&:hover fieldset': { border: 'none', }, '&.Mui-focused fieldset': { border: 'none' } } }} />
-              </Box>
-            </Grid>
-          </Grid>
-
-
-
         </Grid>
-      </Grid>
+
+        <Grid width={'50%'} marginX={'20px'} marginY={'40px'}>
+          <Grid className='cart-container' size={{ xs: 12, md: 6 }}>
+            <Typography variant="h4" marginBottom={"20px"}>Shipping Data</Typography>
+
+            <AddressElement options={{ mode: 'shipping', fields: { phone: 'always' } }} />
+          </Grid>
+
+          <Grid size={{ xs: 12, md: 6 }}>
+            <Box sx={{ width: '100%' }}>
+              <Button type="submit" sx={{ width: '100%', marginTop: '30px', color: 'white', bgcolor: '#ED553B', borderRadius: '5px', paddingX: '30px', paddingY: '18px', fontSize: '15px', marginX: 'auto' }}>Proceed to checkout <FaArrowRightLong className='ms-2' /></Button>
+              <Button onClick={() => (navigate('/dashboard'))} sx={{ width: '100%', marginTop: '30px', color: '#ED553B', bgcolor: 'transparent', borderRadius: '5px', paddingX: '30px', paddingY: '18px', fontSize: '15px', marginX: 'auto', border: '1px solid #ED553B' }}>Continue Shopping <FaArrowRightLong className='ms-2' /></Button>
+            </Box>
+
+          </Grid>
+        </Grid>
+      </form>
     </>
   )
 }

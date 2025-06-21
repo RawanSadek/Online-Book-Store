@@ -3,12 +3,15 @@ import { createContext, useEffect, useState, type ReactNode } from "react";
 import type { BooksType } from "../../Constants/INTERFACES";
 import axios from "axios";
 import { CART_URLs } from "../../Constants/END_POINTS";
+import { toast } from "react-toastify";
 
 interface CartContextInterface {
     cartItems: BooksType[];
+    cartID: any
     getCartItems: () => void;
     addToCart: (book: BooksType) => void;
     removeFromCart: (book: BooksType) => void;
+    deleteProduct: (book: BooksType) => void;
 }
 export const CartContext = createContext<CartContextInterface | null>(null);
 
@@ -19,6 +22,7 @@ interface CartContextproviderProps {
 export default function CartContextProvider({ children }: CartContextproviderProps) {
 
     let [cartItems, setCartItems] = useState<BooksType[]>([]);
+    let [cartID, setCartID] = useState();
 
     // useEffect(() => {
     //     let storedCartItems = localStorage.getItem("cartItems");
@@ -31,16 +35,19 @@ export default function CartContextProvider({ children }: CartContextproviderPro
 
 
 
-    const token = localStorage.getItem('accessToken')
+    const token = localStorage.getItem('accessToken');
 
     const getCartItems = async () => {
         try {
             const response = await axios.get(CART_URLs.getCart, { headers: { Authorization: `Bearer ${token}` } })
-            // console.log(response.data.items)
+            setCartID(response.data._id);
+            // console.log(cartID)
             let filteredItems
             if (response.data.items) {
                 filteredItems = response.data.items.filter((item: any) => item.quantity > 0)
             }
+            // console.log(filteredItems)
+
             setCartItems(filteredItems);
         } catch (error) {
             console.error("Failed to get cart items:", error);
@@ -59,8 +66,12 @@ export default function CartContextProvider({ children }: CartContextproviderPro
         try {
             await axios.post(CART_URLs.addItem, { book: book._id, quantity: 1 }, { headers: { Authorization: `Bearer ${token}` } })
             await getCartItems();
+            toast.success(`${book.name} is added successfully`)
+            // console.log('getCartItems', getCartItems())
+
         } catch (error) {
-            console.error("Failed to add to cart:", error);
+            console.error(error);
+            toast.error(`Failed to add ${book.name} to cart`)
         }
     };
 
@@ -77,14 +88,36 @@ export default function CartContextProvider({ children }: CartContextproviderPro
         // }
 
         try {
-            await axios.delete(CART_URLs.deleteItem, {data: { book: book._id }, headers: { Authorization: `Bearer ${token}` }})
+            await axios.delete(CART_URLs.deleteItem, { data: { book: book._id }, headers: { Authorization: `Bearer ${token}` } })
             await getCartItems();
+            toast.success(`${book.name} removed successfully`)
         } catch (error) {
-            console.error("Failed to delete the item:", error);
+            console.error(error);
+            toast.error(`Failed to remove ${book.name}`)
         }
     };
 
+
+    let deleteProduct = async (book: any) => {
+
+        try {
+            for (let i = 0; i < book.count; i++) {
+                await axios.delete(CART_URLs.deleteItem, {
+                    data: { book: book._id },
+                    headers: { Authorization: `Bearer ${token}` },
+                });
+            }
+            // toast.success('Book removed successfully')
+        }
+        catch (error) {
+            console.error(error);
+            toast.error(`Failed to delete ${book.name}`)
+        }
+        await getCartItems();
+        toast.success(`${book.name} is deleted successfully`);
+    }
+
     return (
-        <CartContext.Provider value={{ cartItems, addToCart, removeFromCart, getCartItems }}>{children}</CartContext.Provider>
+        <CartContext.Provider value={{ cartItems, cartID, addToCart, removeFromCart, getCartItems, deleteProduct }}>{children}</CartContext.Provider>
     )
 }

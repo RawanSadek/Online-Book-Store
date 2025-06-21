@@ -4,6 +4,7 @@ const BASE_AUTH = `${BASE_URL}/api/auth`
 export const BASE_CATEG = `${BASE_URL}/api/category`
 export const BASE_BOOKS = `${BASE_URL}/api/book`
 const BASE_CART = `${BASE_URL}/api/basket`
+const BASE_ORDER = `${BASE_URL}/api/order`
 
 export const AUTH_URLs = {
     login: `${BASE_AUTH}/login`,
@@ -18,4 +19,9 @@ export const CART_URLs = {
     deleteItem: `${BASE_CART}/item`,
     getCart: `${BASE_CART}`,
     updateCartItems: ``
+}
+
+export const ORDER_URLs = {
+    ceateOrder: `${BASE_ORDER}`,
+    getMyOrder: `${BASE_ORDER}/myOrder`
 }

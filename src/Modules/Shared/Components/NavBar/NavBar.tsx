@@ -9,6 +9,7 @@ import { useNavigate } from 'react-router-dom';
 import { useLocation } from 'react-router-dom';
 import { red } from '@mui/material/colors';
 import { CartContext } from '../../../../Contexts/CartContext/CartContext';
+import { toast } from 'react-toastify';
 
 
 export default function NavBar() {
@@ -64,11 +65,12 @@ export default function NavBar() {
 
   let { cartItems }: any = useContext(CartContext);
   let cartItemsCount = 0;
-  if(cartItems){
+  if (cartItems) {
     cartItems = cartItems.filter((item: { quantity: number; }) => item.quantity > 0);
-  cartItems.forEach((item: { quantity: number; }) => {
-    cartItemsCount += item.quantity;
-  });}
+    cartItems.forEach((item: { quantity: number; }) => {
+      cartItemsCount += item.quantity;
+    });
+  }
 
   // const [carItems, setCarItems] = useState<Book[]>([]);
   // const [carItemsCount, setCarItemsCount] = useState(0);
@@ -127,7 +129,7 @@ export default function NavBar() {
             <Divider orientation="vertical" flexItem />
 
             <Tooltip title="Cart">
-              <IconButton onClick={() => { navigate('/dashboard/cart') }}>
+              <IconButton onClick={() => { if (cartItems?.length > 0) {navigate('/dashboard/cart')} else{ toast.info('Your cart is empty!');} }}>
                 <StyledBadge badgeContent={cartItemsCount} showZero sx={{ '& .MuiBadge-badge': { backgroundColor: '#ED553B', color: '#fff' } }}>
                   <LiaShoppingBagSolid color='#393280' />
                 </StyledBadge>
