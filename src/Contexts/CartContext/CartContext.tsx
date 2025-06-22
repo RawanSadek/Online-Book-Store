@@ -22,7 +22,7 @@ interface CartContextproviderProps {
 export default function CartContextProvider({ children }: CartContextproviderProps) {
 
     let [cartItems, setCartItems] = useState<BooksType[]>([]);
-    let [cartID, setCartID] = useState();
+    let [cartID, setCartID] = useState(null);
 
     // useEffect(() => {
     //     let storedCartItems = localStorage.getItem("cartItems");
@@ -40,20 +40,23 @@ export default function CartContextProvider({ children }: CartContextproviderPro
     const getCartItems = async () => {
         try {
             const response = await axios.get(CART_URLs.getCart, { headers: { Authorization: `Bearer ${token}` } })
+            console.log('cartID',response.data._id)
             setCartID(response.data._id);
-            // console.log(cartID)
             let filteredItems
             if (response.data.items) {
                 filteredItems = response.data.items.filter((item: any) => item.quantity > 0)
             }
-            // console.log(filteredItems)
-
+            
             setCartItems(filteredItems);
         } catch (error) {
             console.error("Failed to get cart items:", error);
         }
     };
 
+//     useEffect(() => {
+//     console.log("Updated cartID:", cartID);
+// }, [cartID]);
+    
     useEffect(() => {
         getCartItems();
     }, []);

@@ -22,6 +22,7 @@ import CategoryBooks from './Modules/HomeModule/Components/CategoryBooks/Categor
 import Book from './Modules/HomeModule/Components/Book/Book';
 import { loadStripe } from "@stripe/stripe-js"
 import { Elements } from "@stripe/react-stripe-js"
+import OrderConfirmation from './Modules/CartModule/Components/OrderConfirmation/OrderConfirmation';
 
 function App() {
   const stripe = loadStripe(
@@ -65,6 +66,7 @@ function App() {
             ]
           },
           { path: 'cart', element: <Cart /> },
+          { path: 'confirmation', element: <OrderConfirmation /> },
           { path: 'profile', element: <Profile /> },
         ]
     }

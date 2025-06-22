@@ -26,7 +26,7 @@ export default function Login() {
 
   let { cartItems, cartID, addToCart, removeFromCart, deleteProduct }: any = useContext(CartContext);
   // cartItems = cartItems.filter((item: { quantity: number; }) => item.quantity > 0);
-  // console.log('cartItems', cartItems)
+  console.log('cartItems', cartItems)
 
   let books = JSON.parse(String(localStorage.getItem('books')))
 
@@ -101,7 +101,7 @@ export default function Login() {
   // };
 
   const [paymentMethod, setPaymentMethod] = useState('cash');
-  
+
 
   let stripe = useStripe()
   let elements = useElements()
@@ -124,6 +124,7 @@ export default function Login() {
     console.log(address)
 
     let { error, token } = await stripe.createToken(cardElement);
+    console.log("tokeeennn" ,token)
 
     if (error) {
       toast.error(error.message);
@@ -139,13 +140,13 @@ export default function Login() {
     if (address.complete) {
       let id = cartID;
       let data = {
-        token: token.id,
+        token: "tok_visa",
         delivery_address: {
           country: address.value.address.country,
           city: address.value.address.city,
           state: address.value.address.state,
-          building: 25,
-          street: "11",
+          building: 5,
+          street: "ayhaga",
           floor: 1,
           appartment: 1,
           mobile: address.value.phone,
@@ -157,10 +158,16 @@ export default function Login() {
           }
         }
       }
-      // console.log("id   ",cartID)
+      console.log("id   ",cartID)
+      console.log("data", data)
+      console.log("url ",`${ORDER_URLs.ceateOrder}/${id}`)
+
       try {
         let response = await axios.post(`${ORDER_URLs.ceateOrder}/${id}`, data, { headers: { Authorization: `Bearer ${accessToken}` } });
-        console.log("sssssssssssssssssss", response)
+        let orderID = response.data.data._id;
+        let totalPrice = response.data.data.total;
+        console.log(response)
+        navigate('/dashboard/confirmation', {state:{orderID, totalPrice}})
 
       } catch (error) {
         console.log(error)

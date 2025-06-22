@@ -138,14 +138,6 @@ export default function NavBar() {
 
             <Divider orientation="vertical" flexItem />
 
-            <Tooltip title="Favourites">
-              <IconButton>
-                <VscHeart color='#393280' />
-              </IconButton>
-            </Tooltip>
-
-            <Divider orientation="vertical" flexItem />
-
             <Tooltip title="Logout">
               <IconButton onClick={() => navigate('/')}>
                 <LuLogOut color='#393280' />
