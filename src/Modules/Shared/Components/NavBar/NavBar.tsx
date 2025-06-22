@@ -16,7 +16,7 @@ export default function NavBar() {
 
   let navigate = useNavigate();
 
-  const navItems = ['HOME', 'BOOKS', 'NEW RELEASE'];
+  const navItems = ['HOME', 'BOOKS', 'CATEGORIES'];
 
   const [drawerOpen, setDrawerOpen] = useState(false);
   const theme = useTheme();
@@ -129,7 +129,7 @@ export default function NavBar() {
             <Divider orientation="vertical" flexItem />
 
             <Tooltip title="Cart">
-              <IconButton onClick={() => { if (cartItems?.length > 0) {navigate('/dashboard/cart')} else{ toast.info('Your cart is empty!');} }}>
+              <IconButton onClick={() => {{navigate('/dashboard/cart')}}}>
                 <StyledBadge badgeContent={cartItemsCount} showZero sx={{ '& .MuiBadge-badge': { backgroundColor: '#ED553B', color: '#fff' } }}>
                   <LiaShoppingBagSolid color='#393280' />
                 </StyledBadge>

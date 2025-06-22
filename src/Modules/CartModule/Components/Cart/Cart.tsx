@@ -26,7 +26,7 @@ export default function Login() {
 
   let { cartItems, cartID, addToCart, removeFromCart, deleteProduct }: any = useContext(CartContext);
   // cartItems = cartItems.filter((item: { quantity: number; }) => item.quantity > 0);
-  console.log('cartItems', cartItems)
+  // console.log('cartItems', cartItems)
 
   let books = JSON.parse(String(localStorage.getItem('books')))
 
@@ -71,9 +71,11 @@ export default function Login() {
 
 
   let subtotal = 0;
-  consolidatedBooks.forEach((book: { count: number; price: number; }) => {
-    subtotal += book.count * book.price
-  });
+  if (consolidatedBooks) {
+    consolidatedBooks.forEach((book: { count: number; price: number; }) => {
+      subtotal += book.count * book.price
+    });
+  }
   // console.log('consolidatedBooks', consolidatedBooks)
 
 
@@ -121,10 +123,10 @@ export default function Login() {
     }
 
     let address = await addressElement.getValue();
-    console.log(address)
+    // console.log(address)
 
     let { error, token } = await stripe.createToken(cardElement);
-    console.log("tokeeennn" ,token)
+    // console.log("tokeeennn", token)
 
     if (error) {
       toast.error(error.message);
@@ -158,16 +160,16 @@ export default function Login() {
           }
         }
       }
-      console.log("id   ",cartID)
-      console.log("data", data)
-      console.log("url ",`${ORDER_URLs.ceateOrder}/${id}`)
+      // console.log("id   ", cartID)
+      // console.log("data", data)
+      // console.log("url ", `${ORDER_URLs.ceateOrder}/${id}`)
 
       try {
         let response = await axios.post(`${ORDER_URLs.ceateOrder}/${id}`, data, { headers: { Authorization: `Bearer ${accessToken}` } });
         let orderID = response.data.data._id;
         let totalPrice = response.data.data.total;
         console.log(response)
-        navigate('/dashboard/confirmation', {state:{orderID, totalPrice}})
+        navigate('/dashboard/confirmation', { state: { orderID, totalPrice } })
 
       } catch (error) {
         console.log(error)
@@ -196,7 +198,7 @@ export default function Login() {
                 </TableRow>
               </TableHead>
               <TableBody sx={{ border: ' none' }}>
-                {consolidatedBooks.map((book: any) => (
+                {consolidatedBooks? consolidatedBooks.map((book: any) => (
                   <TableRow
                     key={book._id}
                     sx={{ border: ' none' }}
@@ -218,7 +220,8 @@ export default function Login() {
                     <TableCell sx={{ color: 'navy', fontSize: '1em', border: 'none' }} align="center">{`$ ${book.totalPrice}`}</TableCell>
                     <TableCell sx={{ color: 'navy', fontSize: '1em', border: 'none' }} align="center"><MdDeleteOutline size={25} color="#ED553B" className="cursor-pointer" onClick={() => (deleteProduct(book))} /></TableCell>
                   </TableRow>
-                ))}
+                ))
+                : <Typography variant="h6" sx={{marginTop:'20px'}}>Your shopping cart is empty!</Typography>}
               </TableBody>
             </Table>
           </TableContainer>
@@ -226,75 +229,79 @@ export default function Login() {
 
         <Grid size={{ xs: 7, md: 3.5 }} sx={{ marginX: 'auto', height: 'fit-content' }}>
 
-          <Box className='ver-cart-container'>
-            <Typography sx={{ color: 'navy', textTransform: 'capitalize', fontSize: '20px', marginBottom: '20px' }}>Total Cost</Typography>
+          {consolidatedBooks &&
+            <Box className='ver-cart-container'>
+              <Typography sx={{ color: 'navy', textTransform: 'capitalize', fontSize: '20px', marginBottom: '20px' }}>Total Cost</Typography>
 
-            <Divider sx={{ bgcolor: 'navy', opacity: '1' }} />
+              <Divider sx={{ bgcolor: 'navy', opacity: '1' }} />
 
-            <Grid container spacing={2} marginTop={"30px"} fontSize={{ xs: '4vw', md: '1.6vw' }} color={'navy'}>
-              <Grid size={6}>Subtotal</Grid>
-              <Grid size={6} sx={{ textAlign: 'end' }}>{`$${subtotal}`}</Grid>
-            </Grid>
+              <Grid container spacing={2} marginTop={"30px"} fontSize={{ xs: '4vw', md: '1.6vw' }} color={'navy'}>
+                <Grid size={6}>Subtotal</Grid>
+                <Grid size={6} sx={{ textAlign: 'end' }}>{`$${subtotal}`}</Grid>
+              </Grid>
 
-            <Grid container spacing={2} marginTop={"30px"} fontSize={{ xs: '4vw', md: '1.6vw' }} color={'navy'}>
-              <Grid size={6}>Shipping</Grid>
-              <Grid size={6} sx={{ textAlign: 'end' }}>$10</Grid>
-            </Grid>
+              <Grid container spacing={2} marginTop={"30px"} fontSize={{ xs: '4vw', md: '1.6vw' }} color={'navy'}>
+                <Grid size={6}>Shipping</Grid>
+                <Grid size={6} sx={{ textAlign: 'end' }}>$10</Grid>
+              </Grid>
 
-            <Grid container spacing={2} marginTop={"30px"} fontSize={{ xs: '4vw', md: '1.6vw' }} color={'navy'}>
-              <Grid size={6}>Total</Grid>
-              <Grid size={6} sx={{ textAlign: 'end' }}>{`$${subtotal + 10}`}</Grid>
-            </Grid>
-          </Box>
+              <Grid container spacing={2} marginTop={"30px"} fontSize={{ xs: '4vw', md: '1.6vw' }} color={'navy'}>
+                <Grid size={6}>Total</Grid>
+                <Grid size={6} sx={{ textAlign: 'end' }}>{`$${subtotal + 10}`}</Grid>
+              </Grid>
+            </Box>}
+            
         </Grid>
       </Grid>
 
-      <form onSubmit={handleSubmit}>
-        <Grid width={'50%'} marginX={'20px'} marginY={'40px'}>
-          <Grid className='cart-container' size={{ xs: 12, md: 6 }}>
-            <Typography variant="h4" marginBottom={"20px"}>Payment Info</Typography>
+      {consolidatedBooks &&
+        <form onSubmit={handleSubmit}>
+          <Grid width={'50%'} marginX={'20px'} marginY={'40px'}>
+            <Grid className='cart-container' size={{ xs: 12, md: 6 }}>
+              <Typography variant="h4" marginBottom={"20px"}>Payment Info</Typography>
 
-            <Grid>
-              <FormControl>
-                <FormLabel id="demo-controlled-radio-buttons-group" sx={{ color: 'navy', fontSize: '20px', mt: '20px', mb: '10px', '&.Mui-focused': { color: 'navy' } }}>Payment Method:</FormLabel>
-                <RadioGroup
-                  aria-labelledby="demo-controlled-radio-buttons-group"
-                  name="controlled-radio-buttons-group"
-                  value={paymentMethod}
-                  onChange={(e) => setPaymentMethod(e.target.value)}
-                >
-                  <FormControlLabel sx={{ color: 'navy' }} value="cash" control={<Radio defaultChecked sx={{ color: 'navy', '&.Mui-checked': { color: 'navy' } }} />} label="Cash on Delivery" />
-                  <FormControlLabel sx={{ color: 'navy' }} value="credit" control={<Radio sx={{ color: 'navy', '&.Mui-checked': { color: 'navy' } }} />} label="Credit Card" />
-                </RadioGroup>
-              </FormControl>
+              <Grid>
+                <FormControl>
+                  <FormLabel id="demo-controlled-radio-buttons-group" sx={{ color: 'navy', fontSize: '20px', mt: '20px', mb: '10px', '&.Mui-focused': { color: 'navy' } }}>Payment Method:</FormLabel>
+                  <RadioGroup
+                    aria-labelledby="demo-controlled-radio-buttons-group"
+                    name="controlled-radio-buttons-group"
+                    value={paymentMethod}
+                    defaultValue={'cash'}
+                    onChange={(e) => setPaymentMethod(e.target.value)}
+                  >
+                    <FormControlLabel sx={{ color: 'navy' }} value="cash" control={<Radio sx={{ color: 'navy', '&.Mui-checked': { color: 'navy' } }} />} label="Cash on Delivery" />
+                    <FormControlLabel sx={{ color: 'navy' }} value="credit" control={<Radio sx={{ color: 'navy', '&.Mui-checked': { color: 'navy' } }} />} label="Credit Card" />
+                  </RadioGroup>
+                </FormControl>
+              </Grid>
+
+              {paymentMethod == 'credit' &&
+                <FormControl sx={{ width: '100%' }}>
+                  {/* <Grid size={2}> */}
+                  {/* </Grid> */}
+                  <FormLabel id="demo-controlled-radio-buttons-group" sx={{ color: 'grey', fontSize: '18px', mt: '20px', mb: '5px', '&.Mui-focused': { color: 'grey' } }}> Card Info:</FormLabel>
+                  <CardElement />
+                </FormControl>}
+            </Grid>
+          </Grid>
+
+          <Grid width={'50%'} marginX={'20px'} marginY={'40px'}>
+            <Grid className='cart-container' size={{ xs: 12, md: 6 }}>
+              <Typography variant="h4" marginBottom={"20px"}>Shipping Data</Typography>
+
+              <AddressElement options={{ mode: 'shipping', fields: { phone: 'always' } }} />
             </Grid>
 
-            {paymentMethod == 'credit' &&
-              <FormControl sx={{ width: '100%' }}>
-                {/* <Grid size={2}> */}
-                {/* </Grid> */}
-                <FormLabel id="demo-controlled-radio-buttons-group" sx={{ color: 'grey', fontSize: '18px', mt: '20px', mb: '5px', '&.Mui-focused': { color: 'grey' } }}> Card Info:</FormLabel>
-                <CardElement />
-              </FormControl>}
+            <Grid size={{ xs: 12, md: 6 }}>
+              <Box sx={{ width: '100%' }}>
+                <Button type="submit" sx={{ width: '100%', marginTop: '30px', color: 'white', bgcolor: '#ED553B', borderRadius: '5px', paddingX: '30px', paddingY: '18px', fontSize: '15px', marginX: 'auto' }}>Proceed to checkout <FaArrowRightLong className='ms-2' /></Button>
+                <Button onClick={() => (navigate('/dashboard'))} sx={{ width: '100%', marginTop: '30px', color: '#ED553B', bgcolor: 'transparent', borderRadius: '5px', paddingX: '30px', paddingY: '18px', fontSize: '15px', marginX: 'auto', border: '1px solid #ED553B' }}>Continue Shopping <FaArrowRightLong className='ms-2' /></Button>
+              </Box>
+
+            </Grid>
           </Grid>
-        </Grid>
-
-        <Grid width={'50%'} marginX={'20px'} marginY={'40px'}>
-          <Grid className='cart-container' size={{ xs: 12, md: 6 }}>
-            <Typography variant="h4" marginBottom={"20px"}>Shipping Data</Typography>
-
-            <AddressElement options={{ mode: 'shipping', fields: { phone: 'always' } }} />
-          </Grid>
-
-          <Grid size={{ xs: 12, md: 6 }}>
-            <Box sx={{ width: '100%' }}>
-              <Button type="submit" sx={{ width: '100%', marginTop: '30px', color: 'white', bgcolor: '#ED553B', borderRadius: '5px', paddingX: '30px', paddingY: '18px', fontSize: '15px', marginX: 'auto' }}>Proceed to checkout <FaArrowRightLong className='ms-2' /></Button>
-              <Button onClick={() => (navigate('/dashboard'))} sx={{ width: '100%', marginTop: '30px', color: '#ED553B', bgcolor: 'transparent', borderRadius: '5px', paddingX: '30px', paddingY: '18px', fontSize: '15px', marginX: 'auto', border: '1px solid #ED553B' }}>Continue Shopping <FaArrowRightLong className='ms-2' /></Button>
-            </Box>
-
-          </Grid>
-        </Grid>
-      </form>
+        </form>}
     </>
   )
 }

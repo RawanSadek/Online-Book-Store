@@ -40,7 +40,7 @@ export default function CartContextProvider({ children }: CartContextproviderPro
     const getCartItems = async () => {
         try {
             const response = await axios.get(CART_URLs.getCart, { headers: { Authorization: `Bearer ${token}` } })
-            console.log('cartID',response.data._id)
+            // console.log('cartID',response.data._id)
             setCartID(response.data._id);
             let filteredItems
             if (response.data.items) {
@@ -93,7 +93,7 @@ export default function CartContextProvider({ children }: CartContextproviderPro
         try {
             await axios.delete(CART_URLs.deleteItem, { data: { book: book._id }, headers: { Authorization: `Bearer ${token}` } })
             await getCartItems();
-            toast.success(`${book.name} removed successfully`)
+            toast.success(`${book.name} is removed successfully`)
         } catch (error) {
             console.error(error);
             toast.error(`Failed to remove ${book.name}`)
