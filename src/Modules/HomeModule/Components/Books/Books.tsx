@@ -1,4 +1,4 @@
-import { Accordion, AccordionDetails, AccordionSummary, Box, Card, CardActionArea, CardContent, Checkbox, FormControlLabel, FormGroup, Grid, Pagination, PaginationItem, Stack, TextField, Typography } from '@mui/material';
+import { Accordion, AccordionDetails, AccordionSummary, Box, Card, CardActionArea, CardContent, Checkbox, Container, FormControlLabel, FormGroup, Grid, Pagination, PaginationItem, Slider, Stack, TextField, Typography } from '@mui/material';
 import Item from '@mui/material/Box';
 import { FaArrowDown, FaMinus, FaPlus } from 'react-icons/fa6';
 import { Sidebar, Menu, MenuItem, SubMenu } from 'react-pro-sidebar';
@@ -16,7 +16,7 @@ import book7 from '../../../../assets/book7.png'
 import book8 from '../../../../assets/book8.png'
 import { useNavigate } from 'react-router-dom';
 import { CartContext } from '../../../../Contexts/CartContext/CartContext';
-import { useContext, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import type { BooksType } from '../../../../Constants/INTERFACES';
 
 export default function Login() {
@@ -29,17 +29,88 @@ export default function Login() {
   let [filteredBooks, setFilteredBooks] = useState(books);
   const [selectedCategories, setSelectedCategories] = useState([]);
 
-  let filterBooks = (categID: String) => {
-    let filtered = books.filter((book: BooksType) => book.category == categID )
+  let filterByCategories = (categID: String) => {
+    let filtered = books.filter((book: BooksType) => book.category == categID)
     setFilteredBooks(filtered);
   }
 
+
+
+  //   if (e.target.checked) {
+  //   setSelectedCategories((prev) => [...prev, categID]);
+  // } else {
+  //   setSelectedCategories((prev) =>
+  //     prev.filter((c) => c !== categID)
+  //   );
+  // }
+
+  //   useEffect(() => {
+  //   fetchBooks(selectedCategories);
+  // }, [selectedCategories]);
+
+  //   const handleCategoryChange = (event, category) => {
+  //   setPage(1); // reset to first page when filters change
+
+  //   if (event.target.checked) {
+  //     setSelectedCategories((prev) => [...prev, category]);
+  //   } else {
+  //     setSelectedCategories((prev) =>
+  //       prev.filter((c) => c !== category)
+  //     );
+  //   }
+  // };
+
   let bookImgs: any = [book1, book2, book3, book4, book5, book6, book7, book8];
 
-  let { addToCart }: any = useContext(CartContext);
+  let { addToCart, isLoading }: any = useContext(CartContext);
+
+  let minPrice = 0; let maxPrice = 1000
+
+  // const [value, setValue] = useState<number[]>([minPrice, maxPrice]);
+
+  
+
+  // function valuetext(value: number) {
+  //   return `$${value}`;
+  // }
+
+  const [priceRange, setPriceRange] = useState([minPrice, maxPrice]);
+
+  const handleChange = (e: Event, newValue: number[]) => {
+    setPriceRange(newValue);
+  };
+
+  let filterByPrice = () => {
+      const [min, max] = priceRange;
+      const filtered = books.filter((book:any) => book.price >= min && book.price <= max);
+      setFilteredBooks(filtered);
+    };
+
+    useEffect(() => {
+  filterByPrice();
+}, []);
+  
 
   return (
     <>
+      {isLoading && (
+        <Box
+          sx={{
+            position: 'fixed',
+            top: 0,
+            left: 0,
+            width: '100%',
+            height: '100%',
+            backgroundColor: 'rgba(148, 148, 148, 0.7)',
+            zIndex: 9999,
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center'
+          }}
+        >
+          <Container className='loading'></Container>
+        </Box>
+      )}
       <Grid container spacing={1}>
         <Grid size={{ xs: 12, md: 3 }} sx={{ padding: '20px' }}>
 
@@ -52,10 +123,12 @@ export default function Login() {
               <Typography component="span" color='navy' fontWeight='bold'>Price</Typography>
             </AccordionSummary>
             <AccordionDetails>
-              <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                <Item sx={{ display: 'flex', justifyContent: 'start', alignItems: 'center' }}><FiDollarSign color='navy' /> <TextField sx={{ width: '80%', marginLeft: '5px' }}></TextField> </Item>
-                <Item sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}><Typography variant='body1'>to</Typography></Item>
-                <Item sx={{ display: 'flex', justifyContent: 'end', alignItems: 'center' }}><FiDollarSign color='navy' /> <TextField sx={{ width: '80%', marginLeft: '5px' }}></TextField> </Item>
+              <Box sx={{ width: '100%' }}>
+                <Slider min={0} max={1000} value={priceRange} onChange={handleChange} onChangeCommitted={filterByPrice} valueLabelDisplay="auto" />
+                <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
+                  <Typography variant="body2" color='grey'>${minPrice}</Typography>
+                  <Typography variant="body2" color='grey'>${maxPrice}</Typography>
+                </Box>
               </Box>
             </AccordionDetails>
           </Accordion>
@@ -67,7 +140,7 @@ export default function Login() {
             <AccordionDetails sx={{ height: '50vh', overflowY: 'auto' }}>
               <FormGroup>
                 {categories.map((category: any) => (
-                  <FormControlLabel key={category._id} control={<Checkbox onChange={() => (filterBooks(category._id))} /*checked={selectedCategories.includes(category._id)}*/ color='default' sx={{ color: 'navy' }} />} label={category.title} />
+                  <FormControlLabel key={category._id} control={<Checkbox onChange={() => (filterByCategories(category._id))} /*checked={selectedCategories.includes(category._id)}*/ color='default' sx={{ color: 'navy' }} />} label={category.title} />
                 ))}
               </FormGroup>
             </AccordionDetails>

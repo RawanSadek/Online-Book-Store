@@ -1,4 +1,4 @@
-import { Box, Button, Divider, FormControl, FormControlLabel, FormLabel, Grid, IconButton, Radio, RadioGroup, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TextField, Typography } from "@mui/material";
+import { Box, Button, CircularProgress, Container, Divider, FormControl, FormControlLabel, FormLabel, Grid, IconButton, Radio, RadioGroup, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TextField, Typography } from "@mui/material";
 import { useContext, useEffect, useState, type FormEvent } from "react";
 import { CartContext } from "../../../../Contexts/CartContext/CartContext";
 import Paper from '@mui/material/Paper';
@@ -24,34 +24,13 @@ import type { Token } from "@stripe/stripe-js";
 export default function Login() {
   let navigate = useNavigate()
 
-  let { cartItems, cartID, addToCart, removeFromCart, deleteProduct }: any = useContext(CartContext);
-  // cartItems = cartItems.filter((item: { quantity: number; }) => item.quantity > 0);
-  // console.log('cartItems', cartItems)
+  let { cartItems, cartID, isLoading, getCartItems, addToCart, removeFromCart, deleteProduct }: any = useContext(CartContext);
 
   let books = JSON.parse(String(localStorage.getItem('books')))
 
   let bookImgs: any = [book1, book2, book3, book4, book5, book6, book7, book8];
 
   const accessToken = localStorage.getItem('accessToken');
-
-  // let consolidatedBooks = cartItems.reduce((acc: any[], book: BooksType) => {
-  //   let existing = acc.find((item) => item._id === book._id);
-  //   if (existing) {
-  //     existing.count += 1;
-  //     existing.totalPrice += book.price;
-  //   } else {
-  //     let bookIdx = books.findIndex((b: BooksType) => b._id === book._id);
-  //     acc.push({
-  //       _id: book._id,
-  //       name: book.name,
-  //       price: book.price,
-  //       count: 1,
-  //       index: bookIdx,
-  //       totalPrice: book.price
-  //     });
-  //   }
-  //   return acc;
-  // }, []);
 
   let consolidatedBooks = cartItems?.map((cartItem: any) => {
     let bookIndex = books.findIndex((book: BooksType) => book._id == cartItem.book); // handle both structures
@@ -76,31 +55,6 @@ export default function Login() {
       subtotal += book.count * book.price
     });
   }
-  // console.log('consolidatedBooks', consolidatedBooks)
-
-
-  // let [updatedBooks, setUpdatedBooks] = useState(consolidatedBooks)
-
-  // let incrementCount = (_id: string) => {
-  //   // console.log('consolidated', consolidatedBooks)
-  //   let updatedBookList = consolidatedBooks.map((b: { _id: String; count: number; }) =>
-  //     b._id == _id ? { ...b, count: b.count + 1 } : b
-  //   );
-  //   // console.log('updatedBookList', updatedBookList)
-
-
-  //   let updatedBook = updatedBookList.find((b: { _id: string; }) => b._id == _id);
-  //   addToCart(updatedBook);
-  // };
-
-  // let decrementCount = (_id: string) => {
-  //   let updatedBookList = consolidatedBooks.map((b: { _id: String; count: number; }) =>
-  //     b._id == _id ? { ...b, count: b.count - 1 } : b
-  //   );
-
-  //   let updatedBook = updatedBookList.find((b: { _id: string; }) => b._id == _id);
-  //   removeFromCart(updatedBook)
-  // };
 
   const [paymentMethod, setPaymentMethod] = useState('cash');
 
@@ -115,31 +69,72 @@ export default function Login() {
       return;
     }
 
+    // let cardElement = elements.getElement(CardElement);
+    // let addressElement = elements.getElement(AddressElement);
+
+    // if ((!cardElement && paymentMethod=='credit') || !addressElement) {
+    //   return;
+    // }
+
+    // let address = await addressElement.getValue();
+
+    // let { error, token } = await stripe.createToken(cardElement!); //The '!' means:I know this is not null
+
+    // if (error) {
+    //   toast.error(error.message);
+    //   return;
+    // }
+
+    // if (!token) {
+    //   console.error("Token creation failed and no error returned.");
+    //   toast.error("Something went wrong. Please try again.");
+    //   return;
+    // }
+
     let cardElement = elements.getElement(CardElement);
-    let addressElement = elements.getElement(AddressElement);
+let addressElement = elements.getElement(AddressElement);
 
-    if (!cardElement || !addressElement) {
-      return;
-    }
+// Guard: address must exist for both payment methods
+if (!addressElement) {
+  toast.error("Please enter a valid address.");
+  return;
+}
 
-    let address = await addressElement.getValue();
-    // console.log(address)
+const address = await addressElement.getValue();
 
-    let { error, token } = await stripe.createToken(cardElement);
-    // console.log("tokeeennn", token)
+if (!address.complete) {
+  toast.error("Please complete your address.");
+  return;
+}
 
-    if (error) {
-      toast.error(error.message);
-      return;
-    }
+let tokenID = null;
 
-    if (!token) {
-      console.error("Token creation failed and no error returned.");
-      toast.error("Something went wrong. Please try again.");
-      return;
-    }
+if (paymentMethod === 'credit') {
+  if (!cardElement) {
+    toast.error("Card information is missing.");
+    return;
+  }
 
-    if (address.complete) {
+  let { error, token} = await stripe.createToken(cardElement);
+
+  if (error) {
+    toast.error(error.message);
+    return;
+  }
+
+  if (!token) {
+    console.error("Token creation failed and no error returned.");
+    toast.error("Something went wrong. Please try again.");
+    return;
+  }
+
+  tokenID = "tok_visa";
+} else {
+  // For Cash on Delivery, you can use a placeholder token or skip
+  tokenID = "cash_on_delivery";
+}
+
+    // if (address.complete) {
       let id = cartID;
       let data = {
         token: "tok_visa",
@@ -160,9 +155,6 @@ export default function Login() {
           }
         }
       }
-      // console.log("id   ", cartID)
-      // console.log("data", data)
-      // console.log("url ", `${ORDER_URLs.ceateOrder}/${id}`)
 
       try {
         let response = await axios.post(`${ORDER_URLs.ceateOrder}/${id}`, data, { headers: { Authorization: `Bearer ${accessToken}` } });
@@ -170,18 +162,37 @@ export default function Login() {
         let totalPrice = response.data.data.total;
         console.log(response)
         navigate('/dashboard/confirmation', { state: { orderID, totalPrice } })
+        getCartItems();
 
       } catch (error) {
         console.log(error)
-        // toast.error(error.message);
       }
-    }
+    // }
 
 
   }
 
   return (
     <>
+      {isLoading && (
+        <Box
+          sx={{
+            position: 'fixed',
+            top: 0,
+            left: 0,
+            width: '100%',
+            height: '100%',
+            backgroundColor: 'rgba(148, 148, 148, 0.7)',
+            zIndex: 9999,
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center'
+          }}
+        >
+          <Container className='loading'></Container>
+        </Box>
+      )}
+
       <Grid container spacing={5} sx={{ margin: '20px' }}>
         <Grid className='cart-container' size={{ xs: 12, md: 7 }}>
           <Typography sx={{ color: 'navy', textTransform: 'capitalize', fontSize: '20px', marginBottom: '20px' }}>cart details</Typography>
@@ -198,7 +209,7 @@ export default function Login() {
                 </TableRow>
               </TableHead>
               <TableBody sx={{ border: ' none' }}>
-                {consolidatedBooks? consolidatedBooks.map((book: any) => (
+                {consolidatedBooks ? consolidatedBooks.map((book: any) => (
                   <TableRow
                     key={book._id}
                     sx={{ border: ' none' }}
@@ -221,7 +232,7 @@ export default function Login() {
                     <TableCell sx={{ color: 'navy', fontSize: '1em', border: 'none' }} align="center"><MdDeleteOutline size={25} color="#ED553B" className="cursor-pointer" onClick={() => (deleteProduct(book))} /></TableCell>
                   </TableRow>
                 ))
-                : <Typography variant="h6" sx={{marginTop:'20px'}}>Your shopping cart is empty!</Typography>}
+                  : <Typography variant="h6" sx={{ marginTop: '20px' }}>Your shopping cart is empty!</Typography>}
               </TableBody>
             </Table>
           </TableContainer>
@@ -250,7 +261,7 @@ export default function Login() {
                 <Grid size={6} sx={{ textAlign: 'end' }}>{`$${subtotal + 10}`}</Grid>
               </Grid>
             </Box>}
-            
+
         </Grid>
       </Grid>
 

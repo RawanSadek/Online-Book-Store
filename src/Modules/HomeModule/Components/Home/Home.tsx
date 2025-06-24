@@ -44,16 +44,10 @@ import { CartContext } from '../../../../Contexts/CartContext/CartContext';
 
 
 export default function Login() {
-//  let cartItems = JSON.parse(String(localStorage.getItem('cartItems'))) || []
-
-//  if(! localStorage.getItem('cartItems'))
-//  {
-//   localStorage.setItem('cartItems', '');
-//  }
 
   let navigate = useNavigate()
 
-  let bookImgs:any=[book1,book2,book3,book4,book5,book6,book7,book8];
+  let bookImgs: any = [book1, book2, book3, book4, book5, book6, book7, book8];
 
   let [categories, setCategories] = useState<CategoriesType[] | null>([]);
   let [books, setBooks] = useState<BooksType[] | null>([]);
@@ -92,8 +86,6 @@ export default function Login() {
   const categoryImages = [categImg1, categImg2, categImg3, categImg4, categImg5, categImg6];
 
   let endDate = new Date('2025-12-31T23:59:59');
-  // const [saleEnd, setSaleEnd] = useState(false);
-
   let calculateTimeLeft = () => {
     let remainder = +endDate - +new Date();
 
@@ -134,11 +126,29 @@ export default function Login() {
 
   const articlesImgs = [articleImg1, articleImg2, articleImg3];
 
-  let {addToCart}:any = useContext(CartContext);
+  let { addToCart, isLoading }: any = useContext(CartContext);
 
   return (
     <>
-      <Swiper className=' mt-0'
+      {isLoading && (
+        <Box
+          sx={{
+            position: 'fixed',
+            top: 0,
+            left: 0,
+            width: '100%',
+            height: '100%',
+            backgroundColor: 'rgba(148, 148, 148, 0.7)',
+            zIndex: 9999,
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center'
+          }}
+        >
+          <Container className='loading'></Container>
+        </Box>
+      )}
+      <Swiper className='swiper1 mt-0'
         loop={true}
         pagination={{
           clickable: true,
@@ -281,7 +291,7 @@ export default function Login() {
             >
               <Box>
 
-                {books?.slice(0, 8).map((book:BooksType, index) => (
+                {books?.slice(0, 8).map((book: BooksType, index) => (
                   <SwiperSlide className='categ-slider' onClick={() => { navigate(`/dashboard/books/${book._id}`) }}>
                     <Card key={book._id} sx={{ maxWidth: '100%', border: 'none', boxShadow: 'none', bgcolor: 'transparent' }}>
                       <CardActionArea>
@@ -295,7 +305,7 @@ export default function Login() {
                             onError={(e) => {
                               const target = e.target as HTMLImageElement;
                               target.onerror = null; // prevent infinite loop
-                              target.src = bookImgs[index%8];
+                              target.src = bookImgs[index % 8];
                             }}
                             sx={{ padding: '12%', bgcolor: 'white' }}
                           />
@@ -380,20 +390,20 @@ export default function Login() {
                 <>
                   <SwiperSlide key={index} className='w-100 mb-5'>
                     <Box sx={{ display: 'flex', flexDirection: { xs: 'column', md: 'row', lg: 'row' }, justifyContent: 'space-between', alignItems: 'center' }}>
-                      <Item sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center'}}>
+                      <Item sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
                         <img className='bookImg'
                           src={b.image}
                           alt="book cover"
                           onError={(e) => {
                             const target = e.target as HTMLImageElement;
                             target.onerror = null; // prevent infinite loop
-                            target.src = bookImgs[index%8];
+                            target.src = bookImgs[index % 8];
                           }}
                         />
                       </Item>
                       <Item sx={{ width: '45%' }}>
                         <Typography variant="h2" component="h3" className='text-capitalize navBar-color fw-medium mb-5'>Featured book</Typography>
-                        <Typography variant="body1" className='book-author text-secondary mt-3 text-uppercase position-relative' sx={{ letterSpacing: '2px', lineHeight: '30px', width:'fit-content', fontSize:'12px' }}>{`by ${b.author}`}</Typography>
+                        <Typography variant="body1" className='book-author text-secondary mt-3 text-uppercase position-relative' sx={{ letterSpacing: '2px', lineHeight: '30px', width: 'fit-content', fontSize: '12px' }}>{`by ${b.author}`}</Typography>
                         <Typography variant="h4" component="h4" className='text-capitalize navBar-color fw-medium my-4'>{b.name}</Typography>
                         <Typography variant="body1" className='text-secondary mt-3 fs-6' sx={{ letterSpacing: '2px', lineHeight: '30px' }}>{b.description}</Typography>
                         <Typography variant="h5" component="h5" className='text-capitalize orange-text fw-medium my-5'>$ {b.price}</Typography>
