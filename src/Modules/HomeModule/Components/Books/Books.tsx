@@ -111,8 +111,8 @@ export default function Login() {
           <Container className='loading'></Container>
         </Box>
       )}
-      <Grid container spacing={1}>
-        <Grid size={{ xs: 12, md: 3 }} sx={{ padding: '20px' }}>
+      <Grid container spacing={1} bgcolor={'white'}>
+        <Grid size={{ xs: 12, md: 3 }} sx={{ padding: '20px', position:'sticky', top:'105px', alignSelf: 'flex-start', zIndex:'100'}}>
 
           <Accordion sx={{ border: 'none', boxShadow: 'none' }}>
             <AccordionSummary
@@ -135,9 +135,9 @@ export default function Login() {
 
           <Accordion sx={{ border: 'none', boxShadow: 'none' }}>
             <AccordionSummary expandIcon={<FaChevronDown color='navy' />} >
-              <Typography component="span" color='navy' fontWeight='bold'>Price</Typography>
+              <Typography component="span" color='navy' fontWeight='bold'>Categories</Typography>
             </AccordionSummary>
-            <AccordionDetails sx={{ height: '50vh', overflowY: 'auto' }}>
+            <AccordionDetails sx={{ height: '42vh', overflowY: 'auto' }}>
               <FormGroup>
                 {categories.map((category: any) => (
                   <FormControlLabel key={category._id} control={<Checkbox onChange={() => (filterByCategories(category._id))} /*checked={selectedCategories.includes(category._id)}*/ color='default' sx={{ color: 'navy' }} />} label={category.title} />
