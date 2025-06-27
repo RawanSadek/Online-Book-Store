@@ -1,6 +1,4 @@
-import { Box, Card, CardActionArea, CardContent, CardMedia, Grid, Typography } from '@mui/material';
-import React from 'react'
-import { Outlet } from 'react-router-dom'
+import { Card, CardActionArea, CardContent, CardMedia, Grid, Typography } from '@mui/material';
 import categImg1 from '../../../../assets/slider2-img1.jpg'
 import categImg2 from '../../../../assets/slider2-img2.jpg'
 import categImg3 from '../../../../assets/slider2-img3.jpg'

@@ -18,13 +18,3 @@ export interface BooksType {
     createdAt: string;
     __v: number;
 }
-
-// export interface Book {
-//     _id: number;
-//     name: string;
-//     description: string;
-//     author: string;
-//     price: number;
-//     category: string
-//     image: string
-// }

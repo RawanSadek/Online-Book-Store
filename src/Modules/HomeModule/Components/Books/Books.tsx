@@ -1,10 +1,5 @@
-import { Accordion, AccordionDetails, AccordionSummary, Box, Card, CardActionArea, CardContent, Checkbox, Container, FormControlLabel, FormGroup, Grid, Pagination, PaginationItem, Slider, Stack, TextField, Typography } from '@mui/material';
-import Item from '@mui/material/Box';
-import { FaArrowDown, FaMinus, FaPlus } from 'react-icons/fa6';
-import { Sidebar, Menu, MenuItem, SubMenu } from 'react-pro-sidebar';
-import { FiDollarSign } from "react-icons/fi";
+import { Accordion, AccordionDetails, AccordionSummary, Box, Card, CardActionArea, CardContent, Checkbox, Container, FormControlLabel, FormGroup, Grid, Pagination, PaginationItem, Slider, Stack, Typography } from '@mui/material';
 import { FaChevronDown } from "react-icons/fa";
-import { HiOutlineArrowNarrowLeft, HiOutlineArrowNarrowRight } from 'react-icons/hi';
 import { LiaArrowAltCircleLeft, LiaArrowAltCircleRight } from 'react-icons/lia';
 import book1 from '../../../../assets/book1.png'
 import book2 from '../../../../assets/book2.png'
@@ -26,15 +21,7 @@ export default function Login() {
   let categories = JSON.parse(String(localStorage.getItem('categories')));
   let books = JSON.parse(String(localStorage.getItem('books')));
 
-  let [filteredBooks, setFilteredBooks] = useState(books);
-  const [selectedCategories, setSelectedCategories] = useState([]);
-
-  let filterByCategories = (categID: String) => {
-    let filtered = books.filter((book: BooksType) => book.category == categID)
-    setFilteredBooks(filtered);
-  }
-
-
+  
 
   //   if (e.target.checked) {
   //   setSelectedCategories((prev) => [...prev, categID]);
@@ -66,25 +53,34 @@ export default function Login() {
 
   let minPrice = 0; let maxPrice = 1000
 
-  // const [value, setValue] = useState<number[]>([minPrice, maxPrice]);
-
-  
-
-  // function valuetext(value: number) {
-  //   return `$${value}`;
-  // }
-
-  const [priceRange, setPriceRange] = useState([minPrice, maxPrice]);
-
+  let [filteredBooks, setFilteredBooks] = useState(books);
   const handleChange = (e: Event, newValue: number[]) => {
     setPriceRange(newValue);
+    console.log(e)
   };
-
+  
+  const [priceRange, setPriceRange] = useState([minPrice, maxPrice]);
   let filterByPrice = () => {
-      const [min, max] = priceRange;
-      const filtered = books.filter((book:any) => book.price >= min && book.price <= max);
-      setFilteredBooks(filtered);
-    };
+    const [min, max] = priceRange;
+    const filtered = books.filter((book:any) => book.price >= min && book.price <= max);
+    setFilteredBooks(filtered);
+  };
+  
+  // const [selectedCategories, setSelectedCategories] = useState([]);
+    let filterByCategories = (categID: String) => {
+    let filtered = books.filter((book: BooksType) => book.category == categID)
+    setFilteredBooks(filtered);
+  }
+
+//  const handleSelectedCategories = (categoryId: string) => {
+//   setSelectedCategories((prev) => {
+//     if (prev.includes(categoryId)) {
+//       return prev.filter((id) => id !== categoryId);
+//     } else {
+//       return [...prev, categoryId];
+//     }
+//   });
+// }; 
 
     useEffect(() => {
   filterByPrice();

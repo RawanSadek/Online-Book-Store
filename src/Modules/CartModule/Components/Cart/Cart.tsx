@@ -1,7 +1,6 @@
-import { Box, Button, CircularProgress, Container, Divider, FormControl, FormControlLabel, FormLabel, Grid, IconButton, Radio, RadioGroup, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TextField, Typography } from "@mui/material";
-import { useContext, useEffect, useState, type FormEvent } from "react";
+import { Box, Button, Container, Divider, FormControl, FormControlLabel, FormLabel, Grid, Radio, RadioGroup, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography } from "@mui/material";
+import { useContext, useState, type FormEvent } from "react";
 import { CartContext } from "../../../../Contexts/CartContext/CartContext";
-import Paper from '@mui/material/Paper';
 import type { BooksType } from "../../../../Constants/INTERFACES";
 import book1 from '../../../../assets/book1.png'
 import book2 from '../../../../assets/book2.png'
@@ -11,15 +10,13 @@ import book5 from '../../../../assets/book5.png'
 import book6 from '../../../../assets/book6.png'
 import book7 from '../../../../assets/book7.png'
 import book8 from '../../../../assets/book8.png'
-import { data, Form, useNavigate } from 'react-router-dom';
-import { FaArrowRightLong, FaMinus } from "react-icons/fa6";
+import {useNavigate } from 'react-router-dom';
+import { FaArrowRightLong } from "react-icons/fa6";
 import { MdDeleteOutline } from "react-icons/md";
 import { toast } from "react-toastify";
-import { CART_URLs, ORDER_URLs } from "../../../../Constants/END_POINTS";
+import {ORDER_URLs } from "../../../../Constants/END_POINTS";
 import axios from "axios";
-import { CiCreditCard1 } from "react-icons/ci";
 import { AddressElement, CardElement, useElements, useStripe } from "@stripe/react-stripe-js";
-import type { Token } from "@stripe/stripe-js";
 
 export default function Login() {
   let navigate = useNavigate()
@@ -69,32 +66,9 @@ export default function Login() {
       return;
     }
 
-    // let cardElement = elements.getElement(CardElement);
-    // let addressElement = elements.getElement(AddressElement);
-
-    // if ((!cardElement && paymentMethod=='credit') || !addressElement) {
-    //   return;
-    // }
-
-    // let address = await addressElement.getValue();
-
-    // let { error, token } = await stripe.createToken(cardElement!); //The '!' means:I know this is not null
-
-    // if (error) {
-    //   toast.error(error.message);
-    //   return;
-    // }
-
-    // if (!token) {
-    //   console.error("Token creation failed and no error returned.");
-    //   toast.error("Something went wrong. Please try again.");
-    //   return;
-    // }
-
     let cardElement = elements.getElement(CardElement);
 let addressElement = elements.getElement(AddressElement);
 
-// Guard: address must exist for both payment methods
 if (!addressElement) {
   toast.error("Please enter a valid address.");
   return;
@@ -107,7 +81,7 @@ if (!address.complete) {
   return;
 }
 
-let tokenID = null;
+// let tokenID;
 
 if (paymentMethod === 'credit') {
   if (!cardElement) {
@@ -128,13 +102,10 @@ if (paymentMethod === 'credit') {
     return;
   }
 
-  tokenID = "tok_visa";
+  // tokenID = "tok_visa";
 } else {
-  // For Cash on Delivery, you can use a placeholder token or skip
-  tokenID = "cash_on_delivery";
+  // tokenID = "cash_on_delivery";
 }
-
-    // if (address.complete) {
       let id = cartID;
       let data = {
         token: "tok_visa",

@@ -17,11 +17,6 @@ export const regPasswordValidation = {
     }
 };
 
-// export const confirmPasswordValidation = {
-//     required: {"Please confirm your password."}, \
-//     validate: {(value) => value === getValues("password_new") || "Passwords do not match.", }
-// };
-
 export const otpValidation = {
     required: "Invalid OTP !"
 };

@@ -1,9 +1,8 @@
-import React from 'react'
-import { useParams } from 'react-router-dom';
+// import { useParams } from 'react-router-dom';
 
 export default function CategoryBooks() {
 
-    const { categName } = useParams();
+    // const { categName } = useParams();
   return (
     <div>
       categ books

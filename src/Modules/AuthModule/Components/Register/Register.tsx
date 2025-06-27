@@ -24,7 +24,6 @@ export default function Register() {
   let OnSubmit = async (data:FormInputs)=>{
       try {
         await axios.post(`${AUTH_URLs.register}`,data)
-        // localStorage.setItem('accessToken',response?.data?.data?.accessToken)
         toast.success("Your registration is successfully completed")
         navigate('/login')
         

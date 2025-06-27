@@ -23,12 +23,9 @@ export default function Book() {
   let bookDetails = books.find((book: any) => book._id === bookId);
   let bookIdx = books.findIndex((book: any) => book._id === bookId);
   console.log(bookIdx)
-  // console.log(typeof books[0]., typeof bookId);
 
   let bookImgs: any = [book1, book2, book3, book4, book5, book6, book7, book8];
 
-
-  // console.log(bookId)
   return (
     <>
       {isLoading && (

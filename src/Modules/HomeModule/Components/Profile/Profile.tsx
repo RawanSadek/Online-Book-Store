@@ -1,12 +1,11 @@
-import { Avatar, Box, Grid, IconButton, Tooltip, Typography } from "@mui/material";
-import { MdOutlineLockReset, MdOutlinePassword } from "react-icons/md";
-import { Link, useNavigate } from "react-router-dom";
+import { Avatar, Box, Grid, Typography } from "@mui/material";
+import { MdOutlineLockReset } from "react-icons/md";
+import { Link } from "react-router-dom";
 
 export default function Profile() {
 
   let profileData = JSON.parse(String(localStorage.getItem('profile')));
 
-  let navigate = useNavigate()
   return (
     <>
 

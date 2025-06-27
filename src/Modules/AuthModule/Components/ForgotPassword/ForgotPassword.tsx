@@ -2,7 +2,6 @@ import { Box, Button, TextField, Typography } from "@mui/material";
 import axios from "axios";
 import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
-import { toast } from "react-toastify";
 import { AUTH_URLs } from "../../../../Constants/END_POINTS";
 import { emailValidation } from "../../../../Constants/VALIDATIONS";
 
@@ -17,15 +16,12 @@ export default function ForgotPassword() {
 
   let OnSubmit = async (data: FormInputs) => {
     try {
-      let response = await axios.post(AUTH_URLs.forgot, data)
-      // toast.success(response?.data?.message)
-      // localStorage.setItem('accessToken', response?.data?.data?.accessToken)
+      await axios.post(AUTH_URLs.forgot, data)
       navigate('/reset')
 
     } catch (error) {
       console.log(error)
     }
-    // console.log(data);
   }
 
   return (

@@ -1,15 +1,12 @@
-import { AppBar, Avatar, Badge, Box, colors, Divider, Drawer, IconButton, Link, List, ListItemText, styled, Toolbar, Tooltip, Typography, useMediaQuery, type BadgeProps } from '@mui/material'
-import React, { useContext, useEffect, useState } from 'react'
+import { AppBar, Avatar, Badge, Box, Divider, Drawer, IconButton, Link, List, ListItemText, styled, Toolbar, Tooltip, useMediaQuery, type BadgeProps } from '@mui/material'
+import React, { useContext, useState } from 'react'
 import { LuLogOut, LuUserRound } from "react-icons/lu";
 import { LiaShoppingBagSolid } from "react-icons/lia";
-import { VscHeart } from "react-icons/vsc";
 import { IoMenuOutline } from "react-icons/io5";
 import { useTheme } from '@mui/material/styles';
 import { useNavigate } from 'react-router-dom';
 import { useLocation } from 'react-router-dom';
-import { red } from '@mui/material/colors';
 import { CartContext } from '../../../../Contexts/CartContext/CartContext';
-import { toast } from 'react-toastify';
 
 
 export default function NavBar() {
@@ -29,7 +26,6 @@ export default function NavBar() {
 
   let location = useLocation();
   let pathname = location.pathname;
-  // console.log(pathname)
 
   const StyledBadge = styled(Badge)<BadgeProps>(({ theme }) => ({
     '& .MuiBadge-badge': {
@@ -71,22 +67,6 @@ export default function NavBar() {
       cartItemsCount += item.quantity;
     });
   }
-
-  // const [carItems, setCarItems] = useState<Book[]>([]);
-  // const [carItemsCount, setCarItemsCount] = useState(0);
-
-  // // Load from localStorage when the component mounts
-  // useEffect(() => {
-  //   let stored = localStorage.getItem('cartItems');
-  //   if (stored) {
-  //     setCarItems(JSON.parse(stored));
-  //   }
-  // }, []);
-
-  // // Update count when carItems changes
-  // useEffect(() => {
-  //   setCarItemsCount(carItems.length);
-  // }, [carItems]);
 
   return (
 

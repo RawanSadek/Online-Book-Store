@@ -1,19 +1,15 @@
 import { Swiper, SwiperSlide } from 'swiper/react';
 import 'swiper/swiper-bundle.css'
 import { Autoplay, Navigation, Pagination } from 'swiper/modules';
-import { Link, Outlet, useNavigate } from "react-router-dom";
-import NavBar from "../../../Shared/Components/NavBar/NavBar";
+import {useNavigate } from "react-router-dom";
 import slider1 from '../../../../assets/slider1-img1.png'
 import slider2 from '../../../../assets/slider1-img2.png'
 import slider3 from '../../../../assets/slider1-img3.png'
-import { SlArrowRightCircle } from "react-icons/sl";
-import { SlArrowLeftCircle } from "react-icons/sl";
-import { RiArrowRightCircleFill } from "react-icons/ri";
 import { HiOutlineArrowNarrowRight } from "react-icons/hi";
 import { HiOutlineArrowNarrowLeft } from "react-icons/hi";
-import { BsArrowLeftCircleFill, BsArrowRight, BsArrowRightCircleFill } from "react-icons/bs";
+import {BsArrowRight} from "react-icons/bs";
 import { LiaArrowAltCircleLeft, LiaArrowAltCircleRight } from 'react-icons/lia';
-import { Box, Button, Card, CardActionArea, CardContent, CardMedia, Container, Divider, Grid, ImageListItem, TextField, Typography } from '@mui/material';
+import { Box, Button, Card, CardActionArea, CardContent, CardMedia, Container, Divider, Grid, TextField, Typography } from '@mui/material';
 import Item from '@mui/material/Box';
 import { useContext, useEffect, useState } from 'react';
 import axios from 'axios';

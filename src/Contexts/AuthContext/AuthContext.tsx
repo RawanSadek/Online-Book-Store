@@ -1,6 +1,4 @@
-import { jwtDecode } from "jwt-decode";
 import { createContext, useEffect, useState, type ReactNode } from "react";
-
 
 interface User{
     _id: number;
@@ -25,14 +23,8 @@ export default function AuthContextProvider({ children }: AuthContextproviderPro
     let [userData, setUserData] = useState<User|null>(null);
     let saveUserData = () => {
         localStorage.getItem("accessToken");
-        // const encodedData = localStorage.getItem("accessToken");
-        // if (encodedData) {
-        //     const decodedData = jwtDecode<User>(encodedData);
-        //     setUserData(decodedData)
-        // }
         const profileData = JSON.parse(String(localStorage.getItem("profile")));
         if (profileData) {
-            // const decodedData = jwtDecode<User>(profileData);
             setUserData(profileData)
         }
     }

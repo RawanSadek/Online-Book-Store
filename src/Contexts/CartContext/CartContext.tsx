@@ -1,4 +1,3 @@
-// import { jwtDecode } from "jwt-decode";
 import { createContext, useEffect, useState, type ReactNode } from "react";
 import type { BooksType } from "../../Constants/INTERFACES";
 import axios from "axios";
@@ -26,9 +25,6 @@ export default function CartContextProvider({ children }: CartContextproviderPro
     let [cartID, setCartID] = useState(null);
 
     const [isLoading, setIsLoading] = useState(false);
-
-
-
 
     const token = localStorage.getItem('accessToken');
 
@@ -89,7 +85,6 @@ export default function CartContextProvider({ children }: CartContextproviderPro
                     headers: { Authorization: `Bearer ${token}` },
                 });
             }
-            // toast.success('Book removed successfully')
         }
         catch (error) {
             console.error(error);
