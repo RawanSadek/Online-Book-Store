@@ -17,11 +17,25 @@ import type { BooksType } from '../../../../Constants/INTERFACES';
 export default function Login() {
 
   let navigate = useNavigate();
+  let bookImgs: any = [book1, book2, book3, book4, book5, book6, book7, book8];
 
   let categories = JSON.parse(String(localStorage.getItem('categories')));
   let books = JSON.parse(String(localStorage.getItem('books')));
+  //   let [books, setBooks] = useState<BooksType[]>(
+  //   JSON.parse(localStorage.getItem('books')!)
+  // );
+  // let increaseBooks = () => {
+  //   setBooks((prevBooks) => [...prevBooks, ...prevBooks]);  // to duplicate the books
+  // }
 
-  
+  // useEffect(() => {
+  //   increaseBooks();
+  // }, []);
+  // console.log("1",books)
+  books = books.map((book: BooksType, index: number) => ({ ...book, image: bookImgs[index % 8] }))
+  // console.log("2",books)
+
+
 
   //   if (e.target.checked) {
   //   setSelectedCategories((prev) => [...prev, categID]);
@@ -47,45 +61,81 @@ export default function Login() {
   //   }
   // };
 
-  let bookImgs: any = [book1, book2, book3, book4, book5, book6, book7, book8];
 
   let { addToCart, isLoading }: any = useContext(CartContext);
 
   let minPrice = 0; let maxPrice = 1000
+  const [priceRange, setPriceRange] = useState([minPrice, maxPrice]);
 
-  let [filteredBooks, setFilteredBooks] = useState(books);
-  const handleChange = (e: Event, newValue: number[]) => {
+  let [filteredByPrice, setFilteredByPrice] = useState(books);
+  const handlePriceRangeChange = (e: Event, newValue: number[]) => {
     setPriceRange(newValue);
     console.log(e)
   };
-  
-  const [priceRange, setPriceRange] = useState([minPrice, maxPrice]);
+
   let filterByPrice = () => {
     const [min, max] = priceRange;
-    const filtered = books.filter((book:any) => book.price >= min && book.price <= max);
-    setFilteredBooks(filtered);
+    const filtered = books.filter((book: any) => book.price >= min && book.price <= max);
+    setFilteredByPrice(filtered);
   };
-  
-  // const [selectedCategories, setSelectedCategories] = useState([]);
-    let filterByCategories = (categID: String) => {
-    let filtered = books.filter((book: BooksType) => book.category == categID)
-    setFilteredBooks(filtered);
+
+
+  let [selectedCategories, setSelectedCategories] = useState<string[]>([]);
+  let [filteredByCategories, setFilteredByCategories] = useState(books);
+
+  let handleSelectedCategories = (categoryId: string) => {
+    setSelectedCategories((prev) => {
+      if (prev.includes(categoryId)) {
+        return prev.filter((id) => id !== categoryId);
+      } else {
+        return [...prev, categoryId];
+      }
+    });
+  };
+
+  let filterByCategories = (selectedCategories: String[]) => {
+    let filtered = books.filter((book: BooksType) => selectedCategories.length === 0 || selectedCategories.includes(book.category))
+    setFilteredByCategories(filtered);
   }
 
-//  const handleSelectedCategories = (categoryId: string) => {
-//   setSelectedCategories((prev) => {
-//     if (prev.includes(categoryId)) {
-//       return prev.filter((id) => id !== categoryId);
-//     } else {
-//       return [...prev, categoryId];
-//     }
-//   });
-// }; 
 
-    useEffect(() => {
-  filterByPrice();
-}, []);
-  
+  let [filteredBooks, setFilteredBooks] = useState(books);
+  let filterBooks = () => {
+    setFilteredBooks(filteredByPrice.filter((book: BooksType) => filteredByCategories.some((catBook: BooksType) => catBook._id === book._id)));
+    // setFilteredBooks(filteredByPrice.filter((item: BooksType) =>filteredByCategories.includes(item)));
+
+    // setFilteredBooks(filtered);
+  }
+
+  useEffect(() => {
+    filterByPrice();
+  }, [priceRange]);
+
+  useEffect(() => {
+    filterByCategories(selectedCategories);
+  }, [selectedCategories]);
+
+  useEffect(() => {
+    filterBooks();
+  }, [filteredByPrice, filteredByCategories]);
+
+
+  const [currentPage, setCurrentPage] = useState(1);
+  const booksPerPage = 9;
+
+  const indexOfLastBook = currentPage * booksPerPage;
+  const indexOfFirstBook = indexOfLastBook - booksPerPage;
+  const currentBooks = filteredBooks.slice(indexOfFirstBook, indexOfLastBook);
+
+  const handlePageChange = (event: React.ChangeEvent<unknown>, value: number) => {
+    setCurrentPage(value);
+    window.scrollTo({ top: 0 });
+  };
+
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [filteredBooks]);
+
 
   return (
     <>
@@ -108,7 +158,7 @@ export default function Login() {
         </Box>
       )}
       <Grid container spacing={1} bgcolor={'white'}>
-        <Grid size={{ xs: 12, md: 3 }} sx={{ padding: '20px', position:'sticky', top:'105px', alignSelf: 'flex-start', zIndex:'100'}}>
+        <Grid size={{ xs: 12, md: 3 }} sx={{ padding: '20px', position: 'sticky', top: '105px', alignSelf: 'flex-start', zIndex: '100' }}>
 
           <Accordion sx={{ border: 'none', boxShadow: 'none' }}>
             <AccordionSummary
@@ -120,7 +170,7 @@ export default function Login() {
             </AccordionSummary>
             <AccordionDetails>
               <Box sx={{ width: '100%' }}>
-                <Slider min={0} max={1000} value={priceRange} onChange={handleChange} onChangeCommitted={filterByPrice} valueLabelDisplay="auto" />
+                <Slider min={0} max={1000} value={priceRange} onChange={handlePriceRangeChange} onChangeCommitted={filterByPrice} valueLabelDisplay="auto" />
                 <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
                   <Typography variant="body2" color='grey'>${minPrice}</Typography>
                   <Typography variant="body2" color='grey'>${maxPrice}</Typography>
@@ -136,7 +186,7 @@ export default function Login() {
             <AccordionDetails sx={{ height: '42vh', overflowY: 'auto' }}>
               <FormGroup>
                 {categories.map((category: any) => (
-                  <FormControlLabel key={category._id} control={<Checkbox onChange={() => (filterByCategories(category._id))} /*checked={selectedCategories.includes(category._id)}*/ color='default' sx={{ color: 'navy' }} />} label={category.title} />
+                  <FormControlLabel key={category._id} control={<Checkbox onChange={() => (handleSelectedCategories(category._id))} color='default' sx={{ color: 'navy' }} />} label={category.title} />
                 ))}
               </FormGroup>
             </AccordionDetails>
@@ -147,7 +197,7 @@ export default function Login() {
         <Grid size={{ xs: 12, md: 9 }} sx={{ padding: '20px' }}>
 
           <Grid container spacing={2}>
-            {filteredBooks.map((book: BooksType, index: number) => (
+            {currentBooks.map((book: BooksType, index: number) => (
               <Grid key={book._id} size={{ xs: 10, sm: 6, lg: 4 }} sx={{ margin: 'auto' }}>
                 <Card sx={{ maxWidth: '100%', border: 'none', boxShadow: 'none', bgcolor: 'transparent' }} onClick={() => { navigate(`/dashboard/books/${book._id}`) }}>
                   <CardActionArea>
@@ -158,11 +208,11 @@ export default function Login() {
                         width="100%"
                         src={book.image}
                         alt="book cover"
-                        onError={(e) => {
-                          const target = e.target as HTMLImageElement;
-                          target.onerror = null; // prevent infinite loop
-                          target.src = bookImgs[index % 8];
-                        }}
+                        // onError={(e) => {
+                        //   const target = e.target as HTMLImageElement;
+                        //   target.onerror = null; // prevent infinite loop
+                        //   target.src = bookImgs[index % 8];
+                        // }}
                         sx={{ padding: '12%', bgcolor: 'white' }}
                       />
 
@@ -201,7 +251,7 @@ export default function Login() {
                 </Card>
               </Grid>
             ))}
-            {filteredBooks.map((book: BooksType, index: number) => (
+            {/* {currentBooks.map((book: BooksType, index: number) => (
               <Grid key={book._id} size={{ xs: 10, sm: 6, lg: 4 }} sx={{ margin: 'auto' }} onClick={() => { navigate(`/dashboard/books/${book._id}`) }}>
                 <Card sx={{ maxWidth: '100%', border: 'none', boxShadow: 'none', bgcolor: 'transparent' }}>
                   <CardActionArea>
@@ -254,10 +304,10 @@ export default function Login() {
                   </CardActionArea>
                 </Card>
               </Grid>
-            ))}
+            ))} */}
           </Grid>
 
-          <Stack spacing={2} sx={{ width: 'fit-content', margin: 'auto' }}>
+          {/* <Stack spacing={2} sx={{ width: 'fit-content', margin: 'auto' }}>
             <Pagination sx={{ width: 'fit-content', marginLeft: 'auto' }}
               count={5}
               renderItem={(item) => (
@@ -267,11 +317,33 @@ export default function Login() {
                 />
               )}
             />
-          </Stack>
+          </Stack> */}
 
+          <Pagination
+            count={Math.ceil(filteredBooks.length / booksPerPage)}
+            page={currentPage}
+            onChange={handlePageChange}
+            sx={{
+    width: 'fit-content',
+    margin: 'auto',
+    marginY: 4,
+    '& .MuiPaginationItem-root': {
+      color: '#ED553B',
+      borderColor: '#ED553B',
+    },
+    '& .Mui-selected': {
+      backgroundColor: '#ED553B !important',
+      color: 'white',
+      fontWeight: 'bold',
+    }
+  }}
+
+            shape="circular"
+          />
         </Grid>
 
       </Grid>
+
     </>
   )
 }
