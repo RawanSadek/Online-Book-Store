@@ -9,7 +9,7 @@ import book5 from '../../../../assets/book5.png'
 import book6 from '../../../../assets/book6.png'
 import book7 from '../../../../assets/book7.png'
 import book8 from '../../../../assets/book8.png'
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { CartContext } from '../../../../Contexts/CartContext/CartContext';
 import { useContext, useEffect, useState } from 'react';
 import type { BooksType } from '../../../../Constants/INTERFACES';
@@ -80,7 +80,10 @@ export default function Login() {
   };
 
 
-  let [selectedCategories, setSelectedCategories] = useState<string[]>([]);
+  const location = useLocation();
+  const categoryId = location.state?.categoryId;
+
+  let [selectedCategories, setSelectedCategories] = useState<string[]>(categoryId ? [categoryId] : []);
   let [filteredByCategories, setFilteredByCategories] = useState(books);
 
   let handleSelectedCategories = (categoryId: string) => {
@@ -179,14 +182,14 @@ export default function Login() {
             </AccordionDetails>
           </Accordion>
 
-          <Accordion sx={{ border: 'none', boxShadow: 'none' }}>
+          <Accordion defaultExpanded sx={{ border: 'none', boxShadow: 'none' }}>
             <AccordionSummary expandIcon={<FaChevronDown color='navy' />} >
               <Typography component="span" color='navy' fontWeight='bold'>Categories</Typography>
             </AccordionSummary>
-            <AccordionDetails sx={{ height: '42vh', overflowY: 'auto' }}>
+            <AccordionDetails  sx={{ height: '42vh', overflowY: 'auto' }}>
               <FormGroup>
                 {categories.map((category: any) => (
-                  <FormControlLabel key={category._id} control={<Checkbox onChange={() => (handleSelectedCategories(category._id))} color='default' sx={{ color: 'navy' }} />} label={category.title} />
+                  <FormControlLabel key={category._id} control={<Checkbox onChange={() => (handleSelectedCategories(category._id))} checked={selectedCategories.includes(category._id)} color='default' sx={{ color: 'navy' }} />} label={category.title} />
                 ))}
               </FormGroup>
             </AccordionDetails>
@@ -324,19 +327,19 @@ export default function Login() {
             page={currentPage}
             onChange={handlePageChange}
             sx={{
-    width: 'fit-content',
-    margin: 'auto',
-    marginY: 4,
-    '& .MuiPaginationItem-root': {
-      color: '#ED553B',
-      borderColor: '#ED553B',
-    },
-    '& .Mui-selected': {
-      backgroundColor: '#ED553B !important',
-      color: 'white',
-      fontWeight: 'bold',
-    }
-  }}
+              width: 'fit-content',
+              margin: 'auto',
+              marginY: 4,
+              '& .MuiPaginationItem-root': {
+                color: '#ED553B',
+                borderColor: '#ED553B',
+              },
+              '& .Mui-selected': {
+                backgroundColor: '#ED553B !important',
+                color: 'white',
+                fontWeight: 'bold',
+              }
+            }}
 
             shape="circular"
           />

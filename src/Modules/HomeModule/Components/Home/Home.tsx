@@ -225,9 +225,9 @@ export default function Login() {
             >
 
               {categories?.map((category, index: number) => (
-                <SwiperSlide className='categ-slider' onClick={() => { navigate(`/dashboard/categories/${category.title}`) }}>
+                <SwiperSlide className='categ-slider' onClick={()=>(navigate('/dashboard/books', { state: { categoryId: category._id } }))}>
                   <Card key={category._id} sx={{ maxWidth: '100%', border: 'none', boxShadow: 'none' }}>
-                    <CardActionArea>
+                    <CardActionArea >
                       <CardMedia
                         component="img"
                         height="200"

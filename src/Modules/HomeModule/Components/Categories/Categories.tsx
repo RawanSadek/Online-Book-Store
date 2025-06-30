@@ -5,10 +5,13 @@ import categImg3 from '../../../../assets/slider2-img3.jpg'
 import categImg4 from '../../../../assets/slider2-img4.jpg'
 import categImg5 from '../../../../assets/slider2-img5.jpg'
 import categImg6 from '../../../../assets/slider2-img6.jpg'
+import { useNavigate } from 'react-router-dom';
 
 export default function Categories() {
   let categories = JSON.parse(String(localStorage.getItem('categories')));
     const categoryImages = [categImg1, categImg2, categImg3, categImg4, categImg5, categImg6];
+
+    let navigate = useNavigate();
 
   return (
     <div>
@@ -20,7 +23,7 @@ export default function Categories() {
             {categories.map((categ: any, index: number) => (
               <Grid key={categ._id} size={{ xs: 10, sm: 6, lg: 4 }} sx={{ margin: 'auto' }}>
                 <Card sx={{ maxWidth: '100%', border: 'none', boxShadow: 'none', bgcolor: 'transparent' }}>
-                  <CardActionArea>
+                  <CardActionArea onClick={()=>(navigate('/dashboard/books', { state: { categoryId: categ._id }}))}>
                     <CardMedia
                         component="img"
                         height="200"
