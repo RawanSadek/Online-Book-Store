@@ -278,7 +278,7 @@ if (paymentMethod === 'credit') {
             <Grid size={{ xs: 12, md: 6 }}>
               <Box sx={{ width: '100%' }}>
                 <Button type="submit" sx={{ width: '100%', marginTop: '30px', color: 'white', bgcolor: '#ED553B', borderRadius: '5px', paddingX: '30px', paddingY: '18px', fontSize: '15px', marginX: 'auto' }}>Proceed to checkout <FaArrowRightLong className='ms-2' /></Button>
-                <Button onClick={() => (navigate('/dashboard'))} sx={{ width: '100%', marginTop: '30px', color: '#ED553B', bgcolor: 'transparent', borderRadius: '5px', paddingX: '30px', paddingY: '18px', fontSize: '15px', marginX: 'auto', border: '1px solid #ED553B' }}>Continue Shopping <FaArrowRightLong className='ms-2' /></Button>
+                <Button onClick={() => (navigate('/dashboard/books'))} sx={{ width: '100%', marginTop: '30px', color: '#ED553B', bgcolor: 'transparent', borderRadius: '5px', paddingX: '30px', paddingY: '18px', fontSize: '15px', marginX: 'auto', border: '1px solid #ED553B' }}>Continue Shopping <FaArrowRightLong className='ms-2' /></Button>
               </Box>
 
             </Grid>

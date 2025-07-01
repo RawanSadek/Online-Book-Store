@@ -140,6 +140,11 @@ export default function Login() {
   }, [filteredBooks]);
 
 
+  const sortByPriceAscending = () => {
+  const sorted = [...filteredBooks].sort((a, b) => a.price - b.price);
+  setFilteredBooks(sorted);
+};
+
   return (
     <>
       {isLoading && (
