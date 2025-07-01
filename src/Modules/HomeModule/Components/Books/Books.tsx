@@ -1,6 +1,5 @@
 import { Accordion, AccordionDetails, AccordionSummary, Box, Card, CardActionArea, CardContent, Checkbox, Container, FormControl, FormControlLabel, FormGroup, Grid, InputLabel, MenuItem, Pagination, PaginationItem, Select, Slider, Stack, Typography } from '@mui/material';
 import { FaChevronDown } from "react-icons/fa";
-import { LiaArrowAltCircleLeft, LiaArrowAltCircleRight } from 'react-icons/lia';
 import book1 from '../../../../assets/book1.png'
 import book2 from '../../../../assets/book2.png'
 import book3 from '../../../../assets/book3.png'
