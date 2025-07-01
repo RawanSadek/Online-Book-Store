@@ -1,4 +1,4 @@
-import { Accordion, AccordionDetails, AccordionSummary, Box, Card, CardActionArea, CardContent, Checkbox, Container, FormControlLabel, FormGroup, Grid, Pagination, PaginationItem, Slider, Stack, Typography } from '@mui/material';
+import { Accordion, AccordionDetails, AccordionSummary, Box, Card, CardActionArea, CardContent, Checkbox, Container, FormControl, FormControlLabel, FormGroup, Grid, InputLabel, MenuItem, Pagination, PaginationItem, Select, Slider, Stack, Typography } from '@mui/material';
 import { FaChevronDown } from "react-icons/fa";
 import { LiaArrowAltCircleLeft, LiaArrowAltCircleRight } from 'react-icons/lia';
 import book1 from '../../../../assets/book1.png'
@@ -141,9 +141,52 @@ export default function Login() {
 
 
   const sortByPriceAscending = () => {
-  const sorted = [...filteredBooks].sort((a, b) => a.price - b.price);
-  setFilteredBooks(sorted);
-};
+    const sorted = [...filteredBooks].sort((a, b) => a.price - b.price);
+    setFilteredBooks(sorted);
+  };
+
+  const sortByPriceDescending = () => {
+    const sorted = [...filteredBooks].sort((a, b) => b.price - a.price);
+    setFilteredBooks(sorted);
+  };
+
+  const sortAlphabeticallyAZ = () => {
+    const sorted = [...filteredBooks].sort((a, b) =>
+      a.name.localeCompare(b.name)
+    );
+    setFilteredBooks(sorted);
+  };
+
+  const sortAlphabeticallyZA = () => {
+    const sorted = [...filteredBooks].sort((a, b) =>
+      b.name.localeCompare(a.name)
+    );
+    setFilteredBooks(sorted);
+  };
+
+  const [sortOption, setSortOption] = useState('name-asc');
+
+  const handleChange = (event: any) => {
+    const value = event.target.value;
+
+    switch (value) {
+      case 'AZ':
+        sortAlphabeticallyAZ();
+        break;
+      case 'ZA':
+        sortAlphabeticallyZA();
+        break;
+      case 'asc':
+        sortByPriceAscending();
+        break;
+      case 'desc':
+        sortByPriceDescending();
+        break;
+      default:
+        break;
+    }
+    setSortOption(value);
+  };
 
   return (
     <>
@@ -191,7 +234,7 @@ export default function Login() {
             <AccordionSummary expandIcon={<FaChevronDown color='navy' />} >
               <Typography component="span" color='navy' fontWeight='bold'>Categories</Typography>
             </AccordionSummary>
-            <AccordionDetails  sx={{ height: '42vh', overflowY: 'auto' }}>
+            <AccordionDetails sx={{ height: '42vh', overflowY: 'auto' }}>
               <FormGroup>
                 {categories.map((category: any) => (
                   <FormControlLabel key={category._id} control={<Checkbox onChange={() => (handleSelectedCategories(category._id))} checked={selectedCategories.includes(category._id)} color='default' sx={{ color: 'navy' }} />} label={category.title} />
@@ -203,6 +246,24 @@ export default function Login() {
         </Grid>
 
         <Grid size={{ xs: 12, md: 9 }} sx={{ padding: '20px' }}>
+
+          <FormControl sx={{width:'fit-content', minWidth:'150px'}} variant="standard">
+            <InputLabel sx={{ color: 'navy' }}>Sort by :</InputLabel>
+            <Select
+              value={sortOption}
+              onChange={handleChange}
+              displayEmpty
+              sx={{
+                fontWeight: 'bold',
+                color: 'navy',
+              }}
+            >
+              <MenuItem value="AZ">Alphabetically: A-Z</MenuItem>
+              <MenuItem value="ZA">Alphabetically: Z-A</MenuItem>
+              <MenuItem value="asc">Price: Low to High</MenuItem>
+              <MenuItem value="desc">Price: High to Low</MenuItem>
+            </Select>
+          </FormControl>
 
           <Grid container spacing={2}>
             {currentBooks.map((book: BooksType, index: number) => (

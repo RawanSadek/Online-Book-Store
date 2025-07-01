@@ -18,7 +18,6 @@ import ProtectedRoutes from './ProtectedRoutes/ProtectedRoutes';
 import { ToastContainer } from 'react-toastify';
 import Profile from './Modules/HomeModule/Components/Profile/Profile';
 import Categories from './Modules/HomeModule/Components/Categories/Categories';
-import CategoryBooks from './Modules/HomeModule/Components/CategoryBooks/CategoryBooks';
 import Book from './Modules/HomeModule/Components/Book/Book';
 import { loadStripe } from "@stripe/stripe-js"
 import { Elements } from "@stripe/react-stripe-js"
@@ -58,13 +57,9 @@ function App() {
               { path: ':bookId', element: <Book /> },
             ]
           },
-          {
-            path: 'categories',
-            children: [
-              { index: true, element: <Categories /> },
-              { path: ':categName', element: <CategoryBooks /> }
-            ]
-          },
+          {path: 'categories', element: <Categories /> },
+            
+          
           { path: 'cart', element: <Cart /> },
           { path: 'confirmation', element: <OrderConfirmation /> },
           { path: 'profile', element: <Profile /> },
