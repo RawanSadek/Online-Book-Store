@@ -121,7 +121,7 @@ export default function Login() {
     setFilteredBooks(sorted);
   };
 
-  const [sortOption, setSortOption] = useState('name-asc');
+  const [sortOption, setSortOption] = useState();
 
   const handleChange = (event: any) => {
     const value = event.target.value;
