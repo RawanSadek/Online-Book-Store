@@ -20,46 +20,7 @@ export default function Login() {
 
   let categories = JSON.parse(String(localStorage.getItem('categories')));
   let books = JSON.parse(String(localStorage.getItem('books')));
-  //   let [books, setBooks] = useState<BooksType[]>(
-  //   JSON.parse(localStorage.getItem('books')!)
-  // );
-  // let increaseBooks = () => {
-  //   setBooks((prevBooks) => [...prevBooks, ...prevBooks]);  // to duplicate the books
-  // }
-
-  // useEffect(() => {
-  //   increaseBooks();
-  // }, []);
-  // console.log("1",books)
   books = books.map((book: BooksType, index: number) => ({ ...book, image: bookImgs[index % 8] }))
-  // console.log("2",books)
-
-
-
-  //   if (e.target.checked) {
-  //   setSelectedCategories((prev) => [...prev, categID]);
-  // } else {
-  //   setSelectedCategories((prev) =>
-  //     prev.filter((c) => c !== categID)
-  //   );
-  // }
-
-  //   useEffect(() => {
-  //   fetchBooks(selectedCategories);
-  // }, [selectedCategories]);
-
-  //   const handleCategoryChange = (event, category) => {
-  //   setPage(1); // reset to first page when filters change
-
-  //   if (event.target.checked) {
-  //     setSelectedCategories((prev) => [...prev, category]);
-  //   } else {
-  //     setSelectedCategories((prev) =>
-  //       prev.filter((c) => c !== category)
-  //     );
-  //   }
-  // };
-
 
   let { addToCart, isLoading }: any = useContext(CartContext);
 
@@ -104,9 +65,6 @@ export default function Login() {
   let [filteredBooks, setFilteredBooks] = useState(books);
   let filterBooks = () => {
     setFilteredBooks(filteredByPrice.filter((book: BooksType) => filteredByCategories.some((catBook: BooksType) => catBook._id === book._id)));
-    // setFilteredBooks(filteredByPrice.filter((item: BooksType) =>filteredByCategories.includes(item)));
-
-    // setFilteredBooks(filtered);
   }
 
   useEffect(() => {
@@ -267,66 +225,12 @@ export default function Login() {
           <Grid container spacing={2}>
             {currentBooks.map((book: BooksType, index: number) => (
               <Grid key={book._id} size={{ xs: 10, sm: 6, lg: 4 }} sx={{ margin: 'auto' }}>
-                <Card sx={{ maxWidth: '100%', border: 'none', boxShadow: 'none', bgcolor: 'transparent' }} onClick={() => { navigate(`/dashboard/books/${book._id}`) }}>
+                <Card sx={{ maxWidth: '85%', border: 'none', boxShadow: 'none', bgcolor: 'transparent', margin:'auto' }} onClick={() => { navigate(`/dashboard/books/${book._id}`) }}>
                   <CardActionArea>
                     <Box className='book-img-container shadow-sm position-relative'>
                       <Box
                         component="img"
-                        height="420px"
-                        width="100%"
-                        src={book.image}
-                        alt="book cover"
-                        // onError={(e) => {
-                        //   const target = e.target as HTMLImageElement;
-                        //   target.onerror = null; // prevent infinite loop
-                        //   target.src = bookImgs[index % 8];
-                        // }}
-                        sx={{ padding: '12%', bgcolor: 'white' }}
-                      />
-
-                      <Box
-                        className="add-to-cart-overlay"
-                        onClick={(e) => {
-                          e.stopPropagation(); // prevent parent click
-                          addToCart(book);
-                        }}
-                        sx={{
-                          position: 'absolute',
-                          width: '85%',
-                          height: 'fit-content',
-                          top: '50%',
-                          left: '50%',
-                          transform: 'translate(-50%, -50%)',
-                          backgroundColor: '#ED553B',
-                          color: 'white',
-                          padding: '10px',
-                          fontWeight: 'bold',
-                          fontSize: '20px',
-                          textAlign: 'center',
-                          opacity: 0,
-                          visibility: 'hidden',
-                          transition: 'all 0.4s',
-                        }}
-                      >ADD TO CART</Box>
-                    </Box>
-
-                    <CardContent>
-                      <Typography gutterBottom variant="h6" className='navBar-color text-center text-capitalize'>{book.name}</Typography>
-                      <Typography gutterBottom variant="body2" className='text-center text-capitalize text-secondary'>{book.author}</Typography>
-                      <Typography gutterBottom variant="h6" className='orange-text text-center text-capitalize'>{`$ ${book.price}`}</Typography>
-                    </CardContent>
-                  </CardActionArea>
-                </Card>
-              </Grid>
-            ))}
-            {/* {currentBooks.map((book: BooksType, index: number) => (
-              <Grid key={book._id} size={{ xs: 10, sm: 6, lg: 4 }} sx={{ margin: 'auto' }} onClick={() => { navigate(`/dashboard/books/${book._id}`) }}>
-                <Card sx={{ maxWidth: '100%', border: 'none', boxShadow: 'none', bgcolor: 'transparent' }}>
-                  <CardActionArea>
-                    <Box className='book-img-container shadow-sm position-relative'>
-                      <Box
-                        component="img"
-                        height="420px"
+                        height="380px"
                         width="100%"
                         src={book.image}
                         alt="book cover"
@@ -372,20 +276,8 @@ export default function Login() {
                   </CardActionArea>
                 </Card>
               </Grid>
-            ))} */}
+            ))}
           </Grid>
-
-          {/* <Stack spacing={2} sx={{ width: 'fit-content', margin: 'auto' }}>
-            <Pagination sx={{ width: 'fit-content', marginLeft: 'auto' }}
-              count={5}
-              renderItem={(item) => (
-                <PaginationItem sx={{ width: 'fit-content', marginLeft: 'auto' }}
-                  slots={{ previous: () => <LiaArrowAltCircleLeft size={35} color='#ED553B' />, next: () => <LiaArrowAltCircleRight size={35} color='#ED553B' /> }}
-                  {...item}
-                />
-              )}
-            />
-          </Stack> */}
 
           <Pagination
             count={Math.ceil(filteredBooks.length / booksPerPage)}
