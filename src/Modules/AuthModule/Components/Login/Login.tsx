@@ -15,6 +15,8 @@ export default function Login() {
   let navigate = useNavigate()
   let {saveUserData}:any = useContext(AuthContext);
 
+  let profileData = JSON.parse(String(localStorage.getItem('profile')));
+
   interface FormInputs {
     email: string
     password: string
@@ -28,7 +30,7 @@ export default function Login() {
       localStorage.setItem('profile',JSON.stringify(response?.data?.data?.profile))
       localStorage.setItem('accessToken',response?.data?.data?.accessToken)
       saveUserData()
-      toast.success("Welcome to the Book Store")
+      toast.success(`Welcome to the Book Store, ${profileData.first_name}`)
       navigate('/dashboard')
       
     } catch (error) {
