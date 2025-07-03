@@ -1,54 +1,60 @@
-# React + TypeScript + Vite
+📚 Online Book Store Website
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A fully featured e-commerce web application built with **React + TypeScript**. This project simulates a real-world online bookstore, complete with user authentication, product filtering, cart functionality, and secure payments using **Stripe**.
 
-Currently, two official plugins are available:
+---
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+🚀 Live Demo
 
-## Expanding the ESLint configuration
+🔗 View Live Site: https://online-bookstore-modern.netlify.app/
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+---
 
-```js
-export default tseslint.config({
-  extends: [
-    // Remove ...tseslint.configs.recommended and replace with this
-    ...tseslint.configs.recommendedTypeChecked,
-    // Alternatively, use this for stricter rules
-    ...tseslint.configs.strictTypeChecked,
-    // Optionally, add this for stylistic rules
-    ...tseslint.configs.stylisticTypeChecked,
-  ],
-  languageOptions: {
-    // other options...
-    parserOptions: {
-      project: ['./tsconfig.node.json', './tsconfig.app.json'],
-      tsconfigRootDir: import.meta.dirname,
-    },
-  },
-})
-```
+🧩 Key Features
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+- 🔐 **Authentication System**: Register, Login, Forgot Password, and Change Password flows with route protection
+- 🏠 **Home Page**: Clean UI showcasing featured books and navigation
+- 📚 **Books Page**: Filter by category and price, sort, and paginate through the list
+- 🗂️ **Categories Page**: Explore books by genres
+- 📖 **Book Details Page**: View detailed book info, image fallback, and add to cart
+- 🛒 **Cart Page**: Modify quantities, remove items, and view total cost
+- 💳 **Checkout Page**: Secure payment integration via **Stripe**
+- ✅ **Toast Notifications**: Instant feedback for actions like adding to cart or completing payment
+- 📱 **Responsive Design**: Optimized for all screen sizes
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+---
 
-export default tseslint.config({
-  plugins: {
-    // Add the react-x and react-dom plugins
-    'react-x': reactX,
-    'react-dom': reactDom,
-  },
-  rules: {
-    // other rules...
-    // Enable its recommended typescript rules
-    ...reactX.configs['recommended-typescript'].rules,
-    ...reactDom.configs.recommended.rules,
-  },
-})
-```
+🛠️ Tech Stack
+
+| Category         | Tools Used                                   |
+|----------------  |----------------------------------------------|
+| Frontend         | React, TypeScript                            |
+| Styling          | Material UI (MUI), Custom CSS                |
+| Routing          | React Router DOM                             |
+| State Management | React Context API                            |
+| API Handling     | Axios                                        |
+| Payments         | Stripe                                       |
+| Deployment       | Netlify                                      |
+
+---
+
+🧠 What I Learned
+
+- Building a full React + TypeScript app from scratch
+- Handling authentication and protecting routes
+- Implementing filtering, sorting, and pagination logic
+- Creating a smooth and responsive UI with MUI
+- Managing global state using Context API
+- Integrating third-party services like **Stripe**
+- Deploying and troubleshooting on **Netlify**
+
+---
+
+📬 Contact
+
+If you'd like to connect, discuss this project, or explore collaboration:
+
+- 💼 LinkedIn: www.linkedin.com/in/rawanahmedsadek
+
+- 📫 Email: rawansadek267@gmail.com
+
